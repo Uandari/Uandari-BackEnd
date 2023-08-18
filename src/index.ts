@@ -1,6 +1,7 @@
 import express from "express";
 import userRoutes from "./routes/userRoutes";
 import rolRoutes from "./routes/rolRoutes";
+import hourxhourRoutes from "./routes/hourxhourRoutes";
 import dotenv from "dotenv";
 import { Response } from "express";
 const app = express();
@@ -11,6 +12,7 @@ dotenv.config();
 //Routing
 app.use("/api/usuarios", userRoutes);
 app.use("/api/roles", rolRoutes);
+app.use("/api/hourxhour", hourxhourRoutes);
 
 app.get("/ping", (_req,res:Response) => {
   //req.body = "pong";
