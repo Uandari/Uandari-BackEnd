@@ -13,3 +13,6 @@ export enum ROL_PROCEDURES {
   DELETE_ROL = "DELETEROL",
   GETBYID = "SELECT * FROM ROL WHERE idRol = ",
 }
+export enum HOURXHOUR_PROCEDURES {
+  INSERT_MUST_AND_GET_ID = "BEGIN InsertMustAndGetID(:p_must, :p_id); END;",
+}
