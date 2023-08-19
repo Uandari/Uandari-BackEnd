@@ -1,6 +1,6 @@
 import { StatusCodes } from "../common/enums/enums";
 import { Response, Request } from "express";
-import { insertIssueOracle } from "../data/issue-data";
+import { insertIssueOracle, getIssueByIdOracle } from "../data/issue-data";
 
 const insertIssue = async (req: Request, res: Response) => {
   try {
@@ -31,4 +31,22 @@ const insertIssue = async (req: Request, res: Response) => {
     });
   }
 };
-export { insertIssue };
+const getIssueById = async (req: Request, res: Response) => {
+  try {
+    const idIssue = parseInt(req.params.id);
+    const issue = await getIssueByIdOracle(idIssue);
+    res.status(issue.statusCode).json({
+      status: issue.statusCode,
+      message: issue.message,
+      payload: issue.vw,
+    });
+  } catch (error) {
+    res.status(StatusCodes.SERVER_ERROR).json({
+      status: StatusCodes.SERVER_ERROR,
+      message: error,
+      payload: [],
+    });
+  }
+};
+
+export { insertIssue, getIssueById };

@@ -49,3 +49,50 @@ export async function insertIssueOracle(issue: IssueModel): Promise<ResultVW> {
     throw error;
   }
 }
+//Veryfy if the issue exists
+export async function verifyIssueOracle(idIssue: number): Promise<boolean> {
+  try {
+    const db = await new OracleHelper().createConnection();
+    const query = `${ISSUE_PROCEDURES.GETBYID}(${idIssue})`;
+    const result: any = await db.execute(query);
+    return result.rows && result.rows.length > 0;
+  } catch (error) {
+    throw error;
+  }
+}
+//Issue by id
+export async function getIssueByIdOracle(idIssue: number): Promise<ResultVW> {
+  try {
+    const db = await new OracleHelper().createConnection();
+
+    if (!(await verifyIssueOracle(idIssue))) {
+      return new ResultVW("Issue not found", StatusCodes.NOT_FOUND, []);
+    }
+
+    const query = `${ISSUE_PROCEDURES.GETBYID}(${idIssue})`;
+    console.log(query);
+    const result: any = await db.execute(query);
+    const issue: IssueModel = result.rows.map((row: any) => ({
+      idIssue: row[0],
+      idHourXHour: row[1],
+      idCategory: row[2],
+      idType: row[3],
+      enginesAffected: row[4],
+      description_: row[5],
+      date_: row[6],
+      estimateDate: row[7],
+      status: row[8],
+      shift: row[9],
+      isDelete: row[10],
+      idUser: row[11],
+    }));
+    const issueResult: ResultVW = new ResultVW(
+      "Issue found",
+      StatusCodes.OK,
+      issue
+    );
+    return issueResult;
+  } catch (error) {
+    throw error;
+  }
+}
