@@ -15,4 +15,6 @@ export enum ROL_PROCEDURES {
 }
 export enum HOURXHOUR_PROCEDURES {
   INSERT_MUST_AND_GET_ID = "BEGIN InsertMustAndGetID(:p_must, :p_id); END;",
+  UPDATE_HOURXHOUR = "UPDATEHOURXHOUR",
+  GETBYID = "SELECT * FROM HourxHour WHERE idHourXHour = ",
 }
