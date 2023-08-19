@@ -1,5 +1,5 @@
 export class HourXHour {
-  idHourXHour?: number;
+  idHourxHour?: number;
   hour: string;
   date: string;
   must: number;
@@ -8,7 +8,7 @@ export class HourXHour {
   isAcomulative: number;
   diference: number;
   diferenceAcomulative: number;
-  idCelula: number;
+  idCell: number;
   idUser: number;
 
   constructor(
@@ -21,8 +21,8 @@ export class HourXHour {
     diference: number,
     diferenceAcomulative: number,
     idUser: number,
-    idCelula: number,
-    idHourXHour?: number
+    idCell: number,
+    idHourxHour?: number
   ) {
     this.hour = hour;
     this.date = date;
@@ -32,9 +32,8 @@ export class HourXHour {
     this.isAcomulative = isAcomulative;
     this.diference = diference;
     this.diferenceAcomulative = diferenceAcomulative;
-    this.idCelula = idCelula;
+    this.idCell = idCell;
     this.idUser = idUser;
-    this.idHourXHour = idHourXHour;
+    this.idHourxHour = idHourxHour;
   }
 }
-
