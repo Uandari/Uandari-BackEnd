@@ -40,7 +40,7 @@ export async function getHourXHourByIdOracle(
   const db = await new OracleHelper().createConnection();
   try {
     if (!(await verifyHourXHourOracle(idHoraxHora))) {
-      return new ResultVW("HourXHour not found", StatusCodes.NOT_FOUND, []);
+      return new ResultVW("Hour not found", StatusCodes.NOT_FOUND, []);
     }
     const query = `${HOURXHOUR_PROCEDURES.GETBYID}(${idHoraxHora})`;
     const result: any = await db.execute(query);
@@ -67,7 +67,6 @@ export async function getHourXHourByIdOracle(
     throw error;
   }
 }
-
 //Veryfy if hourXhour exist
 export async function verifyHourXHourOracle(
   idHourXHour: number
@@ -81,7 +80,6 @@ export async function verifyHourXHourOracle(
     throw error;
   }
 }
-
 //UPDATE HOURXHOUR
 export async function updateHourXHourOracle(
   hourXhour: HourXHour

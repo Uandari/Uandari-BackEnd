@@ -3,6 +3,7 @@ import { Response, Request } from "express";
 import {
   insertMustAndGetIDOracle,
   updateHourXHourOracle,
+  getHourXHourByIdOracle,
 } from "../data/hourxhour-data";
 
 const insertMustAndGetID = async (req: Request, res: Response) => {
@@ -56,4 +57,23 @@ const updateHourxHour = async (req: Request, res: Response) => {
   }
 };
 
-export { insertMustAndGetID, updateHourxHour };
+const getHourxHourById = async (req: Request, res: Response) => {
+  try {
+    const idHourxHour = parseInt(req.params.id);
+    console.log(idHourxHour);
+    const hourXhour = await getHourXHourByIdOracle(idHourxHour);
+    res.status(hourXhour.statusCode).json({
+      status: hourXhour.statusCode,
+      message: hourXhour.message,
+      payload: hourXhour.vw,
+    });
+  } catch (error) {
+    res.status(StatusCodes.SERVER_ERROR).json({
+      status: StatusCodes.SERVER_ERROR,
+      message: error,
+      payload: [],
+    });
+  }
+};
+
+export { insertMustAndGetID, updateHourxHour, getHourxHourById };
