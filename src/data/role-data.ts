@@ -39,7 +39,7 @@ export async function createRoleOracle(role: RoleModel): Promise<ResultVW> {
     const { name } = role;
     const query = `
       BEGIN 
-          ${ROLE_PROCEDURES.CREATE_ROL}(
+          ${ROLE_PROCEDURES.CREATE_ROLE}(
           '${name}'
         );
       END;
@@ -106,7 +106,7 @@ export async function deleteRoleByIdOracle(idRole: number): Promise<ResultVW> {
     }
     const query = `
       BEGIN 
-          ${ROLE_PROCEDURES.DELETE_ROL}(
+          ${ROLE_PROCEDURES.DELETE_ROLE}(
           ${idRole}
         );
       END;
@@ -131,7 +131,7 @@ export async function updateRoleOracle(role: RoleModel): Promise<ResultVW> {
 
     const query = `
       BEGIN 
-          ${ROLE_PROCEDURES.UPDATE_ROL}(
+          ${ROLE_PROCEDURES.UPDATE_ROLE}(
           ${idRole},
           '${name}'
         );
