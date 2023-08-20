@@ -1,6 +1,11 @@
 import { StatusCodes } from "../common/enums/enums";
 import { Response, Request } from "express";
-import { insertIssueOracle } from "../data/issue-data";
+import {
+  insertIssueOracle,
+  getIssueByIdOracle,
+  updateIssueOracle,
+  deleteIssueOracle,
+} from "../data/issue-data";
 
 const insertIssue = async (req: Request, res: Response) => {
   try {
@@ -31,4 +36,67 @@ const insertIssue = async (req: Request, res: Response) => {
     });
   }
 };
-export { insertIssue };
+const getIssueById = async (req: Request, res: Response) => {
+  try {
+    const idIssue = parseInt(req.params.id);
+    const issue = await getIssueByIdOracle(idIssue);
+    res.status(issue.statusCode).json({
+      status: issue.statusCode,
+      message: issue.message,
+      payload: issue.vw,
+    });
+  } catch (error) {
+    res.status(StatusCodes.SERVER_ERROR).json({
+      status: StatusCodes.SERVER_ERROR,
+      message: error,
+      payload: [],
+    });
+  }
+};
+const updateIssue = async (req: Request, res: Response) => {
+  try {
+    const issue = {
+      idIssue: parseInt(req.body.idIssue),
+      idHourXHour: parseInt(req.body.idHourXHour),
+      idCategory: parseInt(req.body.idCategory),
+      idType: parseInt(req.body.idType),
+      enginesAffected: req.body.enginesAffected,
+      description_: req.body.description_,
+      date_: req.body.date_,
+      estimateDate: req.body.estimateDate,
+      status: req.body.status,
+      shift: req.body.shift,
+      idUser: parseInt(req.body.idUser),
+    };
+    const issueUpdated = await updateIssueOracle(issue);
+    res.status(issueUpdated.statusCode).json({
+      status: issueUpdated.statusCode,
+      message: issueUpdated.message,
+      payload: issueUpdated.vw,
+    });
+  } catch (error) {
+    res.status(StatusCodes.SERVER_ERROR).json({
+      status: StatusCodes.SERVER_ERROR,
+      message: error,
+      payload: [],
+    });
+  }
+};
+const deleteIssue = async (req: Request, res: Response) => {
+  try {
+    const idIssue = parseInt(req.body.idIssue);
+    const issueDeleted = await deleteIssueOracle(idIssue);
+    res.status(issueDeleted.statusCode).json({
+      status: issueDeleted.statusCode,
+      message: issueDeleted.message,
+      payload: issueDeleted.vw,
+    });
+  } catch (error) {
+    res.status(StatusCodes.SERVER_ERROR).json({
+      status: StatusCodes.SERVER_ERROR,
+      message: error,
+      payload: [],
+    });
+  }
+};
+export { insertIssue, getIssueById, updateIssue, deleteIssue };
