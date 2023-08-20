@@ -61,9 +61,16 @@ export async function findByNoControl(controlNumber: number): Promise<boolean> {
 export async function createUserOracle(user: UserModel): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
-    const { name, lastNames, controlNumber, mail, password, idRole, imageUrl } =
-      user;
-    await findByNoControl(parseInt(controlNumber));
+    const {
+      name,
+      lastNames,
+      controlNumber,
+      mail,
+      password,
+      idRole,
+      imageUrl,
+    } = user;
+
     const plsqlBlock = `
       BEGIN
         ADDUSER(
