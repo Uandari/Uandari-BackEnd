@@ -2,11 +2,11 @@ import { StatusCodes } from "../common/enums/enums";
 import { Response, Request } from "express";
 import {
   getRolesOracle,
-  createRolOracle,
-  getRolByIdOracle,
-  deleteRolByIdOracle,
-  updateRolOracle,
-} from "../data/rol-data";
+  createRoleOracle,
+  getRoleByIdOracle,
+  deleteRoleByIdOracle,
+  updateRoleOracle,
+} from "../data/role-data";
 
 //Get All Roles from Oracle
 const getAllRoles = async (_req: Request, res: Response) => {
@@ -25,12 +25,12 @@ const getAllRoles = async (_req: Request, res: Response) => {
     });
   }
 };
-const registerRol = async (req: Request, res: Response) => {
+const registerRole = async (req: Request, res: Response) => {
   try {
-    const rol = {
-      nombre: req.body.nombre,
+    const role = {
+      name: req.body.name,
     };
-    const roles = await createRolOracle(rol);
+    const roles = await createRoleOracle(role);
 
     res.status(roles.statusCode).json({
       status: roles.statusCode,
@@ -46,14 +46,14 @@ const registerRol = async (req: Request, res: Response) => {
   }
 };
 
-const getRolById = async (req: Request, res: Response) => {
+const getRoleById = async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id);
-    const rol = await getRolByIdOracle(id);
-    res.status(rol.statusCode).json({
-      status: rol.statusCode,
-      message: rol.message,
-      payload: rol.vw,
+    const idRole = parseInt(req.params.idRole);
+    const role = await getRoleByIdOracle(idRole);
+    res.status(role.statusCode).json({
+      status: role.statusCode,
+      message: role.message,
+      payload: role.vw,
     });
   } catch (error) {
     res.status(StatusCodes.SERVER_ERROR).json({
@@ -64,16 +64,16 @@ const getRolById = async (req: Request, res: Response) => {
   }
 };
 
-const deleteRol = async (req: Request, res: Response) => {
+const deleteRole = async (req: Request, res: Response) => {
   try {
-    const idRol = parseInt(req.body.idRol);
+    const idRole = parseInt(req.body.idRole);
 
-    const rolDeleted = await deleteRolByIdOracle(idRol);
+    const roleDeleted = await deleteRoleByIdOracle(idRole);
 
-    res.status(rolDeleted.statusCode).json({
-      status: rolDeleted.statusCode,
-      message: rolDeleted.message,
-      payload: rolDeleted.vw,
+    res.status(roleDeleted.statusCode).json({
+      status: roleDeleted.statusCode,
+      message: roleDeleted.message,
+      payload: roleDeleted.vw,
     });
   } catch (error) {
     res.status(StatusCodes.SERVER_ERROR).json({
@@ -83,17 +83,17 @@ const deleteRol = async (req: Request, res: Response) => {
     });
   }
 };
-const updateRol = async (req: Request, res: Response) => {
+const updateRole = async (req: Request, res: Response) => {
   try {
-    const rol = {
-      idRol: parseInt(req.body.idRol),
-      nombre: req.body.nombre,
+    const role = {
+      idRole: parseInt(req.body.idRole),
+      name: req.body.name,
     };
-    const rolUpdated = await updateRolOracle(rol);
-    res.status(rolUpdated.statusCode).json({
-      status: rolUpdated.statusCode,
-      message: rolUpdated.message,
-      payload: rolUpdated.vw,
+    const roleUpdated = await updateRoleOracle(role);
+    res.status(roleUpdated.statusCode).json({
+      status: roleUpdated.statusCode,
+      message: roleUpdated.message,
+      payload: roleUpdated.vw,
     });
   } catch (error) {
     res.status(StatusCodes.SERVER_ERROR).json({
@@ -103,4 +103,4 @@ const updateRol = async (req: Request, res: Response) => {
     });
   }
 };
-export { getAllRoles, registerRol, getRolById, deleteRol,updateRol };
+export { getAllRoles, registerRole, getRoleById, deleteRole,updateRole };

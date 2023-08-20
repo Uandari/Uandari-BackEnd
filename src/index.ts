@@ -1,6 +1,6 @@
 import express from "express";
 import userRoutes from "./routes/userRoutes";
-import rolRoutes from "./routes/rolRoutes";
+import roleRoutes from "./routes/roleRoutes";
 import issueRoutes from "./routes/issueRoutes";
 import hourxhourRoutes from "./routes/hourxhourRoutes";
 import dotenv from "dotenv";
@@ -12,7 +12,7 @@ const PORT = 4000; //change port if you want
 dotenv.config();
 //Routing
 app.use("/api/usuarios", userRoutes);
-app.use("/api/roles", rolRoutes);
+app.use("/api/roles", roleRoutes);
 app.use("/api/hourxhour", hourxhourRoutes);
 app.use("/api/issues", issueRoutes);
 
