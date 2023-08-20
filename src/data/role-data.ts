@@ -1,14 +1,14 @@
 import { OracleHelper } from "../handlers/OracleHelper";
 import { RoleModel } from "../common/entities/RoleModel";
 import { ResultVW } from "../common/api-interfaces/result";
-import { ROL_PROCEDURES } from "../common/enums/stored-procedures";
+import { ROLE_PROCEDURES } from "../common/enums/stored-procedures";
 import { StatusCodes } from "../common/enums/enums";
 
 //Get all roles using Oracle procedure
 export async function getRolesOracle(): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
-    const query = `${ROL_PROCEDURES.GET_ROLES}`;
+    const query = `${ROLE_PROCEDURES.GET_ROLES}`;
     const result = await db.execute(query);
     if (!result.rows) {
       throw new Error("Query result rows are undefined");
@@ -39,7 +39,7 @@ export async function createRoleOracle(role: RoleModel): Promise<ResultVW> {
     const { name } = role;
     const query = `
       BEGIN 
-          ${ROL_PROCEDURES.CREATE_ROL}(
+          ${ROLE_PROCEDURES.CREATE_ROL}(
           '${name}'
         );
       END;
@@ -68,7 +68,7 @@ export async function getRoleByIdOracle(idRole: number): Promise<ResultVW> {
       //console.log(await verifyRolExistsOracle(idRole));
       return new ResultVW("Role not found", StatusCodes.NOT_FOUND, []);
     }
-    const query = `${ROL_PROCEDURES.GETBYID} ${idRole}`;
+    const query = `${ROLE_PROCEDURES.GETBYID} ${idRole}`;
     const result: any = await db.execute(query);
     const role: RoleModel = result.rows.map((row: any) => ({
       idRole: row[0],
@@ -86,7 +86,7 @@ export async function getRoleByIdOracle(idRole: number): Promise<ResultVW> {
 export async function verifyRoleExistsOracle(idRole: number): Promise<boolean> {
   const db = await new OracleHelper().createConnection();
   try {
-    const query = `${ROL_PROCEDURES.GETBYID} ${idRole}`;
+    const query = `${ROLE_PROCEDURES.GETBYID} ${idRole}`;
     const result: any = await db.execute(query);
     return result.rows && result.rows.length > 0;
   } catch (error) {
@@ -106,7 +106,7 @@ export async function deleteRoleByIdOracle(idRole: number): Promise<ResultVW> {
     }
     const query = `
       BEGIN 
-          ${ROL_PROCEDURES.DELETE_ROL}(
+          ${ROLE_PROCEDURES.DELETE_ROL}(
           ${idRole}
         );
       END;
@@ -131,7 +131,7 @@ export async function updateRoleOracle(role: RoleModel): Promise<ResultVW> {
 
     const query = `
       BEGIN 
-          ${ROL_PROCEDURES.UPDATE_ROL}(
+          ${ROLE_PROCEDURES.UPDATE_ROL}(
           ${idRole},
           '${name}'
         );
