@@ -49,7 +49,7 @@ const registerRole = async (req: Request, res: Response) => {
 const getRoleById = async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
-    const rol = await getRolByIdOracle(id);
+    const rol = await getRoleByIdOracle(id);
     res.status(rol.statusCode).json({
       status: rol.statusCode,
       message: rol.message,
@@ -103,4 +103,4 @@ const updateRole = async (req: Request, res: Response) => {
     });
   }
 };
-export { getAllRoles, registerRol, getRolById, deleteRol,updateRol };
+export { getAllRoles, registerRole, getRoleById, deleteRole,updateRole };
