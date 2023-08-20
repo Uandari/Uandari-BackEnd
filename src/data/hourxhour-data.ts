@@ -134,3 +134,70 @@ export async function updateHourXHourOracle(
     throw error;
   }
 }
+//GET ALL HOURXHOUR
+export async function getAllHourXHourOracle(): Promise<ResultVW> {
+  try {
+    const db = await new OracleHelper().createConnection();
+    const query = `${HOURXHOUR_PROCEDURES.GET_HOURXHOUR}`;
+    const result = await db.execute(query);
+
+    if (!result.rows) {
+      return new ResultVW("HourXHour not found", StatusCodes.NOT_FOUND, []);
+    }
+
+    const hourXhourMap = new Map(); // Map para agrupar objetos por idHourxHour
+
+    // Iterar sobre el resultado de la base de datos y agrupar objetos por idHourxHour
+    result.rows.forEach((row: any) => {
+      const idHourxHour = row[0];
+
+      if (!hourXhourMap.has(idHourxHour)) {
+        hourXhourMap.set(idHourxHour, {
+          idHourxHour,
+          hourXhourData: {
+            idHourxHour: row[0],
+            hour: row[1],
+            date: row[2],
+            must: row[3],
+            mustAcomulative: row[4],
+            is: row[5],
+            isAcomulative: row[6],
+            diference: row[7],
+            diferenceAcomulative: row[8],
+            idUser: row[9],
+            idCell: row[10],
+          },
+          issues: [],
+        });
+      }
+
+      hourXhourMap.get(idHourxHour).issues.push({
+        idhourxhourIssue: row[11],
+        enginesAffected: row[12],
+        description: row[13],
+        date: row[14],
+        estimateDate: row[15],
+        status: row[16],
+        shift: row[17],
+        isDeleted: row[18],
+        category: {
+          name: row[20],
+          description: row[21],
+        },
+        type: {
+          name: row[22],
+        },
+      });
+    });
+
+    const hourXhourResult = [...hourXhourMap.values()];
+
+    if (hourXhourResult.length === 0) {
+      return new ResultVW("HourXHour not found", StatusCodes.NOT_FOUND, []);
+    }
+
+    return new ResultVW("HourXHour found", StatusCodes.OK, hourXhourResult);
+  } catch (error) {
+    throw error;
+  }
+}

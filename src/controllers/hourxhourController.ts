@@ -4,6 +4,7 @@ import {
   insertMustAndGetIDOracle,
   updateHourXHourOracle,
   getHourXHourByIdOracle,
+  getAllHourXHourOracle,
 } from "../data/hourxhour-data";
 
 const insertMustAndGetID = async (req: Request, res: Response) => {
@@ -76,4 +77,26 @@ const getHourxHourById = async (req: Request, res: Response) => {
   }
 };
 
-export { insertMustAndGetID, updateHourxHour, getHourxHourById };
+const getAllHourxHour = async (_req: Request, res: Response) => {
+  try {
+    const hourXhour = await getAllHourXHourOracle();
+    res.status(hourXhour.statusCode).json({
+      status: hourXhour.statusCode,
+      message: hourXhour.message,
+      payload: hourXhour.vw,
+    });
+  } catch (error) {
+    res.status(StatusCodes.SERVER_ERROR).json({
+      status: StatusCodes.SERVER_ERROR,
+      message: error,
+      payload: [],
+    });
+  }
+};
+
+export {
+  insertMustAndGetID,
+  updateHourxHour,
+  getHourxHourById,
+  getAllHourxHour,
+};

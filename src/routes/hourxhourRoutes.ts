@@ -3,6 +3,7 @@ import {
   insertMustAndGetID,
   updateHourxHour,
   getHourxHourById,
+  getAllHourxHour,
 } from "../controllers/hourxhourController";
 const router = express.Router();
 
@@ -12,5 +13,7 @@ router.post("/mustAndGetID", insertMustAndGetID);
 router.post("/updateHour", updateHourxHour);
 //Get Hour by ID
 router.get("/getHour/:id", getHourxHourById);
+//Get All Hours
+router.get("/getAllHours", getAllHourxHour);
 
 export default router;
