@@ -61,16 +61,9 @@ export async function findByNoControl(controlNumber: number): Promise<boolean> {
 export async function createUserOracle(user: UserModel): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
-    const {
-      name,
-      lastNames,
-      controlNumber,
-      mail,
-      password,
-      idRole,
-      imageUrl,
-    } = user;
-
+    const { name, lastNames, controlNumber, mail, password, idRole, imageUrl } =
+      user;
+    await findByNoControl(parseInt(controlNumber));
     const plsqlBlock = `
       BEGIN
         ADDUSER(
@@ -85,7 +78,7 @@ export async function createUserOracle(user: UserModel): Promise<ResultVW> {
         );
       END;
     `;
-
+    //console.log(plsqlBlock);
     const result = await db.execute(plsqlBlock);
     const userResult: ResultVW = new ResultVW(
       "User created",
@@ -150,6 +143,7 @@ export async function getUserByControlNumberOracle(
 export async function updateUserOracle(user: UserModel): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
+    console.log(user.controlNumber);
     if (!(await findByNoControl(parseInt(user.controlNumber)))) {
       return new ResultVW("User not found", StatusCodes.NOT_FOUND, []);
     }
@@ -167,7 +161,7 @@ export async function updateUserOracle(user: UserModel): Promise<ResultVW> {
     const query = `
       BEGIN 
          ${USER_PROCEDURES.UPDATE_USER}(
-          '${idUser}',
+          ${idUser},
           '${name}',
           '${lastNames}',
           '${controlNumber}',
@@ -179,6 +173,7 @@ export async function updateUserOracle(user: UserModel): Promise<ResultVW> {
         );
       END;
     `;
+    console.log(query);
     await db.execute(query);
 
     return new ResultVW("User updated", StatusCodes.OK, user);
@@ -221,7 +216,7 @@ export async function loginUserOracle(user: LoginUser): Promise<ResultVW> {
     const query = `
       SELECT *
       FROM userVW
-      WHERE numeroControl = '${controlNumber}' AND contrasenia = '${password}'
+      WHERE controlNumber = '${controlNumber}' AND password_ = '${password}'
     `;
     console.log(query);
     const result: any = await db.execute(query);
