@@ -1,5 +1,5 @@
 import { OracleHelper } from "../handlers/OracleHelper";
-import { RolModel } from "../common/entities/RolModel";
+import { RoleModel } from "../common/entities/RoleModel";
 import { ResultVW } from "../common/api-interfaces/result";
 import { ROL_PROCEDURES } from "../common/enums/stored-procedures";
 import { StatusCodes } from "../common/enums/enums";
@@ -13,9 +13,9 @@ export async function getRolesOracle(): Promise<ResultVW> {
     if (!result.rows) {
       throw new Error("Query result rows are undefined");
     }
-    const roles: RolModel[] = result.rows.map((rol: any) => ({
-      id: rol[0],
-      nombre: rol[1],
+    const roles: RoleModel[] = result.rows.map((role: any) => ({
+      idRole: role[0],
+      name: role[1],
     }));
     if (roles.length === 0) {
       return new ResultVW(
@@ -32,28 +32,28 @@ export async function getRolesOracle(): Promise<ResultVW> {
   }
 }
 //Create a new rol using Oracle procedure
-export async function createRolOracle(rol: RolModel): Promise<ResultVW> {
+export async function createRoleOracle(role: RoleModel): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
 
   try {
-    const { nombre } = rol;
+    const { name } = role;
     const query = `
       BEGIN 
           ${ROL_PROCEDURES.CREATE_ROL}(
-          '${nombre}'
+          '${name}'
         );
       END;
     `;
     const result = await db.execute(query);
-    const rolResult: ResultVW = new ResultVW(
+    const roleResult: ResultVW = new ResultVW(
       "Rol created",
       StatusCodes.OK,
-      rol
+      role
     );
     if (result.rows && result.rows.length === 0) {
-      return new ResultVW("Rol Problem", StatusCodes.BAD_REQUEST, rol);
+      return new ResultVW("Role Problem", StatusCodes.BAD_REQUEST, role);
     }
-    return rolResult;
+    return roleResult;
   } catch (error) {
     throw error;
   } finally {
@@ -61,21 +61,21 @@ export async function createRolOracle(rol: RolModel): Promise<ResultVW> {
   }
 }
 //Get user by id using Oracle
-export async function getRolByIdOracle(idRol: number): Promise<ResultVW> {
+export async function getRoleByIdOracle(idRole: number): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
-    if (!(await verifyRolExistsOracle(idRol))) {
-      //console.log(await verifyRolExistsOracle(idRol));
-      return new ResultVW("Rol not found", StatusCodes.NOT_FOUND, []);
+    if (!(await verifyRoleExistsOracle(idRole))) {
+      //console.log(await verifyRolExistsOracle(idRole));
+      return new ResultVW("Role not found", StatusCodes.NOT_FOUND, []);
     }
-    const query = `${ROL_PROCEDURES.GETBYID} ${idRol}`;
+    const query = `${ROL_PROCEDURES.GETBYID} ${idRole}`;
     const result: any = await db.execute(query);
-    const rol: RolModel = result.rows.map((row: any) => ({
-      id: row[0],
-      nombre: row[1],
+    const role: RoleModel = result.rows.map((row: any) => ({
+      idRole: row[0],
+      name: row[1],
       isDeleted: row[2],
     }));
-    return new ResultVW("Rol found", StatusCodes.OK, rol);
+    return new ResultVW("Rol found", StatusCodes.OK, role);
   } catch (error) {
     throw error;
   } finally {
@@ -83,10 +83,10 @@ export async function getRolByIdOracle(idRol: number): Promise<ResultVW> {
   }
 }
 //verify if a rol exists using Oracle
-export async function verifyRolExistsOracle(id: number): Promise<boolean> {
+export async function verifyRoleExistsOracle(idRole: number): Promise<boolean> {
   const db = await new OracleHelper().createConnection();
   try {
-    const query = `${ROL_PROCEDURES.GETBYID} ${id}`;
+    const query = `${ROL_PROCEDURES.GETBYID} ${idRole}`;
     const result: any = await db.execute(query);
     return result.rows && result.rows.length > 0;
   } catch (error) {
@@ -96,56 +96,56 @@ export async function verifyRolExistsOracle(id: number): Promise<boolean> {
   }
 }
 //Logic delete a rol by id using Oracle
-export async function deleteRolByIdOracle(idRol: number): Promise<ResultVW> {
+export async function deleteRoleByIdOracle(idRole: number): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
 
   try {
-    if (!(await verifyRolExistsOracle(idRol))) {
-      console.log(await verifyRolExistsOracle(idRol));
-      return new ResultVW("Rol not found", StatusCodes.NOT_FOUND, []);
+    if (!(await verifyRoleExistsOracle(idRole))) {
+      console.log(await verifyRoleExistsOracle(idRole));
+      return new ResultVW("Role not found", StatusCodes.NOT_FOUND, []);
     }
     const query = `
       BEGIN 
           ${ROL_PROCEDURES.DELETE_ROL}(
-          ${idRol}
+          ${idRole}
         );
       END;
     `;
     await db.execute(query);
-    const rol = await getRolByIdOracle(idRol);
-    const rolResult: ResultVW = new ResultVW(
-      "Rol deleted",
+    const role = await getRoleByIdOracle(idRole);
+    const roleResult: ResultVW = new ResultVW(
+      "Role deleted",
       StatusCodes.OK,
-      rol.vw
+      role.vw
     );
-    return rolResult;
+    return roleResult;
   } catch (error) {
     throw error;
   }
 }
 //Update a rol using Oracle
-export async function updateRolOracle(rol: RolModel): Promise<ResultVW> {
+export async function updateRoleOracle(role: RoleModel): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
-    const { idRol, nombre } = rol;
+    const { idRole, name } = role;
 
     const query = `
       BEGIN 
           ${ROL_PROCEDURES.UPDATE_ROL}(
-          ${idRol},
-          '${nombre}'
+          ${idRole},
+          '${name}'
         );
       END;
     `;
     console.log(query);
     await db.execute(query);
-    let rolResult: ResultVW;
-    if (typeof idRol === "number") {
-      rolResult = await getRolByIdOracle(idRol);
-      if (rolResult.vw.length === 0) {
+    let roleResult: ResultVW;
+    if (typeof idRole === "number") {
+      roleResult = await getRoleByIdOracle(idRole);
+      if (roleResult.vw.length === 0) {
         return new ResultVW("Rol not found", StatusCodes.NOT_FOUND, []);
       }
-      return new ResultVW("User updated", StatusCodes.OK, rolResult.vw);
+      return new ResultVW("User updated", StatusCodes.OK, roleResult.vw);
     }
 
     return new ResultVW("Something went wrong ", StatusCodes.NOT_FOUND, []);

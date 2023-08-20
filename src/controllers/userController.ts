@@ -29,16 +29,16 @@ const getAllUsers = async (_req: Request, res: Response) => {
 //Register a new user
 const registerUser = async (req: Request, res: Response) => {
   try {
-    const numeroControl = req.body.numeroControl;
-    const isId = await findByNoControl(numeroControl);
+    const controlNumber = req.body.controlNumber;
+    const isId = await findByNoControl(controlNumber);
     const user = {
-      nombre: req.body.nombre,
-      apellidos: req.body.apellidos,
-      numeroControl: req.body.numeroControl,
-      correo: req.body.correo,
-      contrasenia: req.body.contrasenia,
-      idRol: req.body.idRol,
-      urlImagen: req.body.urlImagen,
+      name: req.body.name,
+      lastNames: req.body.lastNames,
+      controlNumber: req.body.controlNumber,
+      mail: req.body.mail,
+      password: req.body.password,
+      idRole: req.body.idRole,
+      imageUrl: req.body.imageUrl,
     };
     if (!isId) {
       console.log("User:", user);
@@ -67,15 +67,15 @@ const registerUser = async (req: Request, res: Response) => {
 const updateUser = async (req: Request, res: Response) => {
   try {
     const user = {
-      idUsuario: req.body.idUsuario,
-      nombre: req.body.nombre,
-      apellidos: req.body.apellidos,
-      numeroControl: req.body.numeroControl,
-      correo: req.body.correo,
-      contrasenia: req.body.contrasenia,
-      idRol: req.body.idRol,
+      idUser: req.body.idUser,
+      name: req.body.name,
+      lastNames: req.body.lastNames,
+      controlNumber: req.body.controlNumber,
+      mail: req.body.mail,
+      password: req.body.password,
+      idRole: req.body.idRole,
       token: req.body.token,
-      urlImagen: req.body.urlImagen,
+      imageUrl: req.body.imageUrl,
     };
     const resultUpdateUser = await updateUserOracle(user);
     res.status(resultUpdateUser.statusCode).json({
@@ -95,8 +95,8 @@ const updateUser = async (req: Request, res: Response) => {
 const loginUser = async (req: any, res: any) => {
   try {
     const LoginUser = {
-      numeroControl: req.body.numeroControl,
-      contrasenia: req.body.contrasenia,
+      controlNumber: req.body.controlNumber,
+      password: req.body.password,
     };
     const result = await loginUserOracle(LoginUser);
 
@@ -116,9 +116,9 @@ const loginUser = async (req: any, res: any) => {
 //Delete a user
 const deleteUser = async (req: Request, res: Response) => {
   try {
-    const idUsuario = parseInt(req.body.idUsuario);
+    const idUser = parseInt(req.body.idUser);
 
-    const userDeleted = await deleteUserOracle(idUsuario);
+    const userDeleted = await deleteUserOracle(idUser);
     console.log(userDeleted);
     res.status(userDeleted.statusCode).json({
       status: userDeleted.statusCode,
@@ -137,8 +137,8 @@ const getUserById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     console.log(id);
-    const idUsuario = parseInt(id);
-    const user = await getUserByControlNumberOracle(idUsuario);
+    const idUser = parseInt(id);
+    const user = await getUserByControlNumberOracle(idUser);
     res.status(user.statusCode).json({
       status: user.statusCode,
       message: user.message,

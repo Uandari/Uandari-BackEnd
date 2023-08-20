@@ -1,38 +1,38 @@
 export class UserModel {
-  idUsuario?: number;
-  nombre: string;
-  apellidos: string;
-  numeroControl: string;
-  correo: string;
-  contrasenia: string;
-  idRol?: number;
-  cuentaVerificada?: number;
+  idUser?: number;
+  name: string;
+  lastNames: string;
+  controlNumber: string;
+  mail: string;
+  password: string;
+  idRole?: number;
+  verifiedAccount?: number;
   token?: string;
-  urlImagen?: string;
+  imageUrl?: string;
   isDeleted?: number;
 
   //General constructor
   constructor(
-    nombre: string,
-    apellidos: string,
-    numeroControl: string,
-    correo: string,
-    contrasenia: string,
-    idRol: number,
+    name: string,
+    lastNames: string,
+    controlNumber: string,
+    mail: string,
+    password: string,
+    idRole: number,
     token: string,
-    urlImagen?: string,
-    idUsuario?: number,
+    imageUrl?: string,
+    idUser?: number,
     isDelete?: number
   ) {
-    this.nombre = nombre;
-    this.apellidos = apellidos;
-    this.numeroControl = numeroControl;
-    this.correo = correo;
-    this.contrasenia = contrasenia;
-    this.idRol = idRol;
+    this.name = name;
+    this.lastNames = lastNames;
+    this.controlNumber = controlNumber;
+    this.mail = mail;
+    this.password = password;
+    this.idRole = idRole;
     this.token = token;
-    this.urlImagen = urlImagen;
-    this.idUsuario = idUsuario;
+    this.imageUrl = imageUrl;
+    this.idUser = idUser;
     this.isDeleted = isDelete;
   }
 }
