@@ -3,6 +3,7 @@ import userRoutes from "./routes/userRoutes";
 import roleRoutes from "./routes/roleRoutes";
 import issueRoutes from "./routes/issueRoutes";
 import hourxhourRoutes from "./routes/hourxhourRoutes";
+import categoryRoutes from "./routes/categoryRoutes";
 import dotenv from "dotenv";
 import { Response } from "express";
 const app = express();
@@ -15,6 +16,7 @@ app.use("/api/usuarios", userRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/hourxhour", hourxhourRoutes);
 app.use("/api/issues", issueRoutes);
+app.use("/api/categories", categoryRoutes)
 
 app.get("/ping", (_req, res: Response) => {
   //req.body = "pong";
