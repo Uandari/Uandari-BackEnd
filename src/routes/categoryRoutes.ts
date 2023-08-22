@@ -1,7 +1,7 @@
 import express from "express";
 import {
-    getAllCategories,
-    getCategoryById
+  getAllCategories,
+  getCategoryById,
 } from "../controllers/categoryController";
 
 const router = express.Router();
