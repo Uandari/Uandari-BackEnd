@@ -3,7 +3,6 @@ import {
     insertEscalatedIssue,
     getAllEscalatedIssues
 } from "../controllers/escalatedIssueController";
-import { DEFAULT } from "oracledb";
 
 const router = express.Router();
 
