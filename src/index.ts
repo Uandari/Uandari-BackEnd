@@ -5,6 +5,7 @@ import issueRoutes from "./routes/issueRoutes";
 import hourxhourRoutes from "./routes/hourxhourRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
 import typeCategoryRoutes from "./routes/typeCategoryRoutes";
+import escalatedIssueRoutes from "./routes/escalatedIssueRoutes";
 import dotenv from "dotenv";
 import { Response } from "express";
 const app = express();
@@ -19,6 +20,7 @@ app.use("/api/hourxhour", hourxhourRoutes);
 app.use("/api/issues", issueRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/typecategory", typeCategoryRoutes);
+app.use("api/escalatedissues", escalatedIssueRoutes);
 
 app.get("/ping", (_req, res: Response) => {
   //req.body = "pong";
