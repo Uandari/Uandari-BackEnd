@@ -20,7 +20,7 @@ app.use("/api/hourxhour", hourxhourRoutes);
 app.use("/api/issues", issueRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/typecategory", typeCategoryRoutes);
-app.use("api/escalatedissues", escalatedIssueRoutes);
+app.use("/api/escalatedissues", escalatedIssueRoutes);
 
 app.get("/ping", (_req, res: Response) => {
   //req.body = "pong";

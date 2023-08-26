@@ -10,11 +10,11 @@ export async function getEscalatedIssuesOracle(): Promise<ResultVW> {
     try {
         const query = `${ESCALATEDISSUES_PROCEDURES.GET_ESCALATEDISSUES}`;
         const result = await db.execute(query);
-        if(!result.rows){
+        if (!result.rows) {
             throw new Error("Query result rows are undefined")
         }
         const EscalatedIssues: EscalatedIssuesModel[] = result.rows.map((EscalatedIssue: any) => ({
-            idProblemScaled: EscalatedIssue[0],
+            idIssueScaled: EscalatedIssue[0],
             dateScaling: EscalatedIssue[1],
             scaleDeviation: EscalatedIssue[2],
             impeller: EscalatedIssue[3],
@@ -25,7 +25,7 @@ export async function getEscalatedIssuesOracle(): Promise<ResultVW> {
             deadline: EscalatedIssue[8],
             idIssue: EscalatedIssue[9]
         }));
-        if (EscalatedIssues.length === 0){
+        if (EscalatedIssues.length === 0) {
             return new ResultVW(
                 "There are no Escalated Issues to show",
                 StatusCodes.NO_CONTENT,
@@ -35,21 +35,19 @@ export async function getEscalatedIssuesOracle(): Promise<ResultVW> {
         return new ResultVW("Escalated Issues Found", StatusCodes.OK, EscalatedIssues);
     } catch (error) {
         throw error;
-    } finally{
+    } finally {
         db.close();
     }
 };
 
 //Add a new Escalated Issue using Oracle Procedure
-export async function insertEscalatedIssueOracle(escalatedIssue: EscalatedIssuesModel): Promise<ResultVW>{
+export async function insertEscalatedIssueOracle(escalatedIssue: EscalatedIssuesModel): Promise<ResultVW> {
     const db = await new OracleHelper().createConnection();
     try {
         const {
-            idProblemScaled,
             dateScaling,
             scaleDeviation,
             impeller,
-            affect5s,
             agreedAction,
             idUser,
             status,
@@ -58,11 +56,9 @@ export async function insertEscalatedIssueOracle(escalatedIssue: EscalatedIssues
         } = escalatedIssue;
         const query = `BEGIN
         ${ESCALATEDISSUES_PROCEDURES.INSERT_ESCALATEDISSUE}(
-            ${idProblemScaled},
             '${dateScaling}',
             ${scaleDeviation},
             '${impeller}',
-            ${affect5s},
             '${agreedAction}',
             ${idUser},
             ${status},
@@ -70,6 +66,7 @@ export async function insertEscalatedIssueOracle(escalatedIssue: EscalatedIssues
             ${idIssue}
         );
         END;`;
+        console.log(query);
         await db.execute(query);
         const escalatedIssueResult: ResultVW = new ResultVW(
             "Escalated Issue added",
@@ -79,7 +76,7 @@ export async function insertEscalatedIssueOracle(escalatedIssue: EscalatedIssues
         return escalatedIssueResult;
     } catch (error) {
         throw error;
-    } finally{
+    } finally {
         db.close();
     }
 }
