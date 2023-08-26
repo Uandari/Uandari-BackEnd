@@ -143,6 +143,7 @@ export async function updateIssueOracle(issue: IssueModel): Promise<ResultVW> {
     throw error;
   }
 }
+//Delete Issue
 export async function deleteIssueOracle(idIssue: number): Promise<ResultVW> {
   try {
     const db = await new OracleHelper().createConnection();
@@ -159,3 +160,81 @@ export async function deleteIssueOracle(idIssue: number): Promise<ResultVW> {
     throw error;
   }
 }
+//List of issue
+// ... código previo
+
+export async function listOfIssuesOracle(): Promise<ResultVW> {
+  try {
+    const db = await new OracleHelper().createConnection();
+    const query = `${ISSUE_PROCEDURES.LISTOFISSUES}`;
+    const result: any = await db.execute(query);
+    const groupedIssues: any = {};
+
+    result.rows.forEach((row: any) => {
+      const typeCategory = row[2];
+      const description = row[3];
+      const day = row[0];
+      const shift = row[1];
+      const enginesAffected = row[4];
+
+      if (!groupedIssues[typeCategory]) {
+        groupedIssues[typeCategory] = [];
+      }
+
+      const existingIssue = groupedIssues[typeCategory].find(
+        (issue: any) => issue.description === description
+      );
+
+      if (existingIssue) {
+        const existingDay = existingIssue.days.find(
+          (d: any) => d.day === day
+        );
+        if (existingDay) {
+          if (!existingDay.shifts[shift]) {
+            existingDay.shifts[shift] = [];
+          }
+          existingDay.shifts[shift].push(enginesAffected);
+        } else {
+          existingIssue.days.push({
+            day: day,
+            shifts: {
+              [shift]: enginesAffected,
+              "A": [],
+              "B": [],
+              "C": [],
+            }
+          });
+        }
+      } else {
+        groupedIssues[typeCategory].push({
+          typeCategory: typeCategory,
+          description: description,
+          days: [
+            {
+              day: day,
+              shifts: {
+                [shift]: [enginesAffected],
+                "A": [],
+                "B": [],
+                "C": [],
+              }
+            }
+          ]
+        });
+      }
+    });
+
+    const groupedPayload = Object.values(groupedIssues);
+    const issueResult: ResultVW = new ResultVW(
+      "Issues found",
+      StatusCodes.OK,
+      groupedPayload
+    );
+    return issueResult;
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+
