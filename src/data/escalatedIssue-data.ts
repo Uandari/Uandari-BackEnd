@@ -80,3 +80,94 @@ export async function insertEscalatedIssueOracle(escalatedIssue: EscalatedIssues
         db.close();
     }
 }
+
+//Verify if Escalated Issue exist
+export async function verifyIssueScaled(idIssueScaled: number): Promise<boolean> {
+    const db = await new OracleHelper().createConnection();
+    try {
+        const query = `${ESCALATEDISSUES_PROCEDURES.GETBYID}(${idIssueScaled})`;
+        const result: any = await db.execute(query);
+        return result.rows && result.rows.length > 0;
+    } catch (error) {
+        throw error;
+    }
+}
+
+//Get a Escalated Issue by Id using Oracle Procedure
+export async function getEscalatedIssueByIdOracle(idIssueScaled: number): Promise<ResultVW> {
+    const db = await new OracleHelper().createConnection();
+    try {
+        if (!await verifyIssueScaled(idIssueScaled)) {
+            return new ResultVW("Escalated Issue not found", StatusCodes.NOT_FOUND, []);
+        }
+        const query = `${ESCALATEDISSUES_PROCEDURES.GETBYID}(${idIssueScaled})`;
+        const result: any = await db.execute(query);
+        const escalatedIssue: EscalatedIssuesModel[] = result.rows.map((row: any) => ({
+            idIssueScaled: row[0],
+            dateScaling: row[1],
+            scaleDeviation: row[2],
+            impeller: row[3],
+            affect5s: row[4],
+            agreedAction: row[5],
+            idUser: row[6],
+            status: row[7],
+            deadline: row[8],
+            idIssue: row[9]
+        }));
+        const escalatedIssueResult: ResultVW = new ResultVW(
+            "Escalated Issue found",
+            StatusCodes.OK,
+            escalatedIssue
+        );
+        return escalatedIssueResult;
+    } catch (error) {
+        throw error;
+    }
+}
+
+//Update a Escalated Issue using Oracle Procedure
+export async function updateEscalatedIssueOracle(escalatedIssue: EscalatedIssuesModel): Promise<ResultVW> {
+    const db = await new OracleHelper().createConnection();
+    try {
+        const {
+            idIssueScaled,
+            dateScaling,
+            scaleDeviation,
+            impeller,
+            affect5s,
+            agreedAction,
+            idUser,
+            status,
+            deadline,
+            idIssue,
+        } = escalatedIssue;
+        const query = `BEGIN
+        ${ESCALATEDISSUES_PROCEDURES.UPDATE_ESCALATEDISSUE}(
+            ${idIssueScaled},
+            '${dateScaling}',
+            ${scaleDeviation},
+            '${impeller}',
+            ${affect5s},
+            '${agreedAction}',
+            ${idUser},
+            ${status},
+            '${deadline}',
+            ${idIssue}
+        );
+        END;`;
+        await db.execute(query);
+        let escalatedIssueResult: ResultVW;
+
+        if (typeof idIssueScaled === "number"){
+            escalatedIssueResult = await getEscalatedIssueByIdOracle(idIssueScaled);
+            if (escalatedIssueResult.vw.length === 0){
+                return new ResultVW("Escalated Issue not found", StatusCodes.NOT_FOUND, escalatedIssueResult.vw);
+            }
+            return new ResultVW("Escalated Issue updated", StatusCodes.OK, escalatedIssueResult.vw);
+        }
+        return new ResultVW("Something went wrong ", StatusCodes.NOT_FOUND, []);
+    }
+    catch (error) {
+        throw error;
+    }
+}

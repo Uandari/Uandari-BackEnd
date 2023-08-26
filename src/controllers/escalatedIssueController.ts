@@ -2,7 +2,9 @@ import { StatusCodes } from "../common/enums/enums";
 import { Response, Request } from "express";
 import {
     getEscalatedIssuesOracle,
-    insertEscalatedIssueOracle
+    insertEscalatedIssueOracle,
+    updateEscalatedIssueOracle,
+    getEscalatedIssueByIdOracle
 } from "../data/escalatedIssue-data";
 
 const insertEscalatedIssue = async (req: Request, res: Response) => {
@@ -50,4 +52,50 @@ const getAllEscalatedIssues = async (_req: Request, res: Response) => {
     }
 };
 
-export { insertEscalatedIssue, getAllEscalatedIssues };
+const updateEscalatedIssue = async (req: Request, res: Response) => {
+    try {
+        const escalatedIssue = {
+            idIssueScaled: parseInt(req.body.idIssueScaled),
+            dateScaling: req.body.dateScaling,
+            scaleDeviation: parseInt(req.body.scaleDeviation),
+            impeller: req.body.impeller,
+            agreedAction: req.body.agreedAction,
+            idUser: parseInt(req.body.idUser),
+            status: parseInt(req.body.status),
+            deadline: req.body.deadline,
+            idIssue: parseInt(req.body.idIssue)
+        };
+        const escalatedIssueUpdated = await updateEscalatedIssueOracle(escalatedIssue);
+        res.status(escalatedIssueUpdated.statusCode).json({
+            status: escalatedIssueUpdated.statusCode,
+            message: escalatedIssueUpdated.message,
+            payload: escalatedIssueUpdated.vw,
+        });
+    } catch (error) {
+        res.status(StatusCodes.SERVER_ERROR).json({
+            status: StatusCodes.SERVER_ERROR,
+            message: error,
+            payload: [],
+        });
+    }
+};
+
+const getEscalatedIssueById = async (req: Request, res: Response) => {
+    try {
+        const idEscalatedIssue = parseInt(req.params.id);
+        const escalatedIssue = await getEscalatedIssueByIdOracle(idEscalatedIssue);
+        res.status(escalatedIssue.statusCode).json({
+            status: escalatedIssue.statusCode,
+            message: escalatedIssue.message,
+            payload: escalatedIssue.vw,
+        });
+    } catch (error) {
+        res.status(StatusCodes.SERVER_ERROR).json({
+            status: StatusCodes.SERVER_ERROR,
+            message: error,
+            payload: [],
+        });
+    }
+}
+
+export { insertEscalatedIssue, getAllEscalatedIssues, updateEscalatedIssue, getEscalatedIssueById };
