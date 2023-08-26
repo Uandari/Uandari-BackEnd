@@ -5,6 +5,7 @@ import {
   getIssueByIdOracle,
   updateIssueOracle,
   deleteIssueOracle,
+  listOfIssuesOracle
 } from "../data/issue-data";
 
 const insertIssue = async (req: Request, res: Response) => {
@@ -99,4 +100,21 @@ const deleteIssue = async (req: Request, res: Response) => {
     });
   }
 };
-export { insertIssue, getIssueById, updateIssue, deleteIssue };
+const listOfIssues = async (_req: Request, res: Response) => {
+  try {
+    const listIssues = await listOfIssuesOracle();
+    res.status(listIssues.statusCode).json({
+      status: listIssues.statusCode,
+      message: listIssues.message,
+      payload: listIssues.vw,
+    });
+
+  } catch (error) {
+    res.status(StatusCodes.SERVER_ERROR).json({
+      status: StatusCodes.SERVER_ERROR,
+      message: error,
+      payload: [],
+    });
+  }
+}
+export { insertIssue, getIssueById, updateIssue, deleteIssue, listOfIssues };

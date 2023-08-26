@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import userRoutes from "./routes/userRoutes";
 import roleRoutes from "./routes/roleRoutes";
 import issueRoutes from "./routes/issueRoutes";
@@ -13,7 +14,15 @@ app.use(express.json());
 const PORT = 4000; //change port if you want
 
 dotenv.config();
-//Routing
+
+app.use(
+  cors({
+    origin: "http://localhost:5173", 
+  })
+);
+
+
+// Routing
 app.use("/api/usuarios", userRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/hourxhour", hourxhourRoutes);
@@ -23,7 +32,6 @@ app.use("/api/typecategory", typeCategoryRoutes);
 app.use("/api/escalatedissues", escalatedIssueRoutes);
 
 app.get("/ping", (_req, res: Response) => {
-  //req.body = "pong";
   res.send("pong");
 });
 
