@@ -59,6 +59,7 @@ const updateEscalatedIssue = async (req: Request, res: Response) => {
             dateScaling: req.body.dateScaling,
             scaleDeviation: parseInt(req.body.scaleDeviation),
             impeller: req.body.impeller,
+            affect5s: req.body.affect5s,
             agreedAction: req.body.agreedAction,
             idUser: parseInt(req.body.idUser),
             status: parseInt(req.body.status),
