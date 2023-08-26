@@ -15,7 +15,7 @@ export class HourXHour {
     hour: string,
     date: string,
     must: number,
-    mustAcomulative: number,
+    mustAccumulative: number,
     is: number,
     isAcomulative: number,
     diference: number,
@@ -27,7 +27,7 @@ export class HourXHour {
     this.hour = hour;
     this.date = date;
     this.must = must;
-    this.mustAcomulative = mustAcomulative;
+    this.mustAcomulative = mustAccumulative;
     this.is = is;
     this.isAcomulative = isAcomulative;
     this.diference = diference;

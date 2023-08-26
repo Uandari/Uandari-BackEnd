@@ -145,45 +145,28 @@ export async function getAllHourXHourOracle(): Promise<ResultVW> {
       return new ResultVW("HourXHour not found", StatusCodes.NOT_FOUND, []);
     }
 
-    const hourXhourMap = new Map(); // Map para agrupar objetos por idHourxHour
-
-    // Iterar sobre el resultado de la base de datos y agrupar objetos por idHourxHour
+    const hourXhourMap = new Map();
     result.rows.forEach((row: any) => {
       const idHourxHour = row[0];
-
       if (!hourXhourMap.has(idHourxHour)) {
         hourXhourMap.set(idHourxHour, {
           idHourxHour,
-          hourXhourData: {
-            idHourxHour: row[0],
-            hour: row[1],
-            date: row[2],
-            must: row[3],
-            mustAcomulative: row[4],
-            is: row[5],
-            isAcomulative: row[6],
-            diference: row[7],
-            diferenceAcomulative: row[8],
-            idUser: row[9],
-            idCell: row[10],
-          },
+          hour: row[1],
+          date: row[2],
+          must: row[3],
+          mustAccumulative: row[4],
+          is: row[5],
+          isAccumulative: row[6],
+          difference: row[7],
+          accumulativeDifference: row[8],
+          idUser: row[9],
+          idCell: row[10],
           issues: [],
         });
       }
-
       hourXhourMap.get(idHourxHour).issues.push({
         idhourxhourIssue: row[11],
-        enginesAffected: row[12],
         description: row[13],
-        date: row[14],
-        estimateDate: row[15],
-        status: row[16],
-        shift: row[17],
-        isDeleted: row[18],
-        category: {
-          name: row[20],
-          description: row[21],
-        },
         type: {
           name: row[22],
         },
