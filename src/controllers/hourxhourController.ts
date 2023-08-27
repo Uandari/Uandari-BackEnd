@@ -4,8 +4,10 @@ import {
   insertMustAndGetIDOracle,
   updateHourXHourOracle,
   getHourXHourByIdOracle,
-  getAllHourXHourOracle,
+  getHourXHour
 } from "../data/hourxhour-data";
+
+//getAllHourXHourOracle
 
 const insertMustAndGetID = async (req: Request, res: Response) => {
   try {
@@ -76,7 +78,7 @@ const getHourxHourById = async (req: Request, res: Response) => {
     });
   }
 };
-
+/*
 const getAllHourxHour = async (_req: Request, res: Response) => {
   try {
     const hourXhour = await getAllHourXHourOracle();
@@ -93,10 +95,28 @@ const getAllHourxHour = async (_req: Request, res: Response) => {
     });
   }
 };
+*/
+const getHourXHourComplete = async (_req: Request, res: Response) => {
+  try {
+    const hourXhour = await getHourXHour();
+    res.status(hourXhour.statusCode).json({
+      status: hourXhour.statusCode,
+      message: hourXhour.message,
+      payload: hourXhour.vw,
+    });
+  } catch (error) {
+    res.status(StatusCodes.SERVER_ERROR).json({
+      status: StatusCodes.SERVER_ERROR,
+      message: error,
+      payload: [],
+    });
+  }
+
+}
 
 export {
   insertMustAndGetID,
   updateHourxHour,
   getHourxHourById,
-  getAllHourxHour,
+  getHourXHourComplete
 };

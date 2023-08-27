@@ -5,7 +5,8 @@ import {
   getIssueByIdOracle,
   updateIssueOracle,
   deleteIssueOracle,
-  listOfIssuesOracle
+  listOfIssuesOracle,
+  issueXIdHourxHour
 } from "../data/issue-data";
 
 const insertIssue = async (req: Request, res: Response) => {
@@ -117,4 +118,22 @@ const listOfIssues = async (_req: Request, res: Response) => {
     });
   }
 }
-export { insertIssue, getIssueById, updateIssue, deleteIssue, listOfIssues };
+//issueXIdHourxHour
+const issuesXHour = async (req: Request, res: Response) => {
+  try {
+    const idIssue = parseInt(req.body.idHourXHour);
+    const issues = await issueXIdHourxHour(idIssue);
+    res.status(issues.statusCode).json({
+      status: issues.statusCode,
+      message: issues.message,
+      payload: issues.vw,
+    });
+  } catch (error) {
+    res.status(StatusCodes.SERVER_ERROR).json({
+      status: StatusCodes.SERVER_ERROR,
+      message: error,
+      payload: [],
+    });
+  }
+};
+export { insertIssue, getIssueById, updateIssue, deleteIssue, listOfIssues, issuesXHour };

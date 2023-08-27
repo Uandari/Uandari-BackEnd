@@ -70,7 +70,6 @@ export async function getIssueByIdOracle(idIssue: number): Promise<ResultVW> {
     }
 
     const query = `${ISSUE_PROCEDURES.GETBYID}(${idIssue})`;
-    console.log(query);
     const result: any = await db.execute(query);
     const issue: IssueModel = result.rows.map((row: any) => ({
       idIssue: row[0],
@@ -235,6 +234,44 @@ export async function listOfIssuesOracle(): Promise<ResultVW> {
   } catch (error) {
     throw error;
   }
+}
+
+export async function verifyIssueHourXHourOracle(idIssue: number): Promise<boolean> {
+  try {
+    const db = await new OracleHelper().createConnection();
+    const query = `${ISSUE_PROCEDURES.GETISSUESBYHOURS}${idIssue}`;
+    const result: any = await db.execute(query);
+    return result.rows && result.rows.length > 0;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function issueXIdHourxHour(idIssue: number): Promise<ResultVW> {
+  try {
+    const db = await new OracleHelper().createConnection();
+    if (!(await verifyIssueHourXHourOracle(idIssue))) {
+      return new ResultVW("No issue at this time", StatusCodes.BAD_REQUEST, []);
+    }
+    const query = `${ISSUE_PROCEDURES.GETISSUESBYHOURS}(${idIssue})`;
+    const result: any = await db.execute(query);
+    const issue: IssueModel = result.rows.map((row: any) => ({
+      idIssue: row[0],
+      idHourXHour:row[1],
+      description_: row[6],
+      typeCategory: row[12]
+    }));
+    const issueResult: ResultVW = new ResultVW(
+      "Issue found",
+      StatusCodes.OK,
+      issue
+    );
+    return issueResult;
+  }
+  catch (error) {
+    throw error;
+  }
+  
 }
 
 

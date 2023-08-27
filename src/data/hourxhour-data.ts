@@ -1,6 +1,6 @@
 import { OracleHelper } from "../handlers/OracleHelper";
 import oracledb from "oracledb";
-import { HourXHour } from "../common/entities/HourxHourModel";
+import { HourXHourModel } from "../common/entities/HourxHourModel";
 import { ResultVW } from "../common/api-interfaces/result";
 import { MustAndGetID } from "../common/api-interfaces/HourxHour-api/insertMustAndGetID";
 import { HOURXHOUR_PROCEDURES } from "../common/enums/stored-procedures";
@@ -44,7 +44,7 @@ export async function getHourXHourByIdOracle(
     }
     const query = `${HOURXHOUR_PROCEDURES.GETBYID}(${idHoraxHora})`;
     const result: any = await db.execute(query);
-    const hourResult: HourXHour = result.rows.map((row: any) => ({
+    const hourResult: HourXHourModel = result.rows.map((row: any) => ({
       idHourxHour: row[0],
       hour: row[1],
       date: row[2],
@@ -82,7 +82,7 @@ export async function verifyHourXHourOracle(
 }
 //UPDATE HOURXHOUR
 export async function updateHourXHourOracle(
-  hourXhour: HourXHour
+  hourXhour: HourXHourModel
 ): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
@@ -181,6 +181,40 @@ export async function getAllHourXHourOracle(): Promise<ResultVW> {
 
     return new ResultVW("HourXHour found", StatusCodes.OK, hourXhourResult);
   } catch (error) {
+    throw error;
+  }
+}
+
+//GET HOURX HOUR WITHOUT ISSUES
+export async function getHourXHour(): Promise<ResultVW>{
+  try {
+    const db = await new OracleHelper().createConnection();
+    const query = `${HOURXHOUR_PROCEDURES.GET_HOURXHOUR_WITHOUT_ISSUES}`;
+    const result = await db.execute(query);
+    if (!result.rows) {
+      return new ResultVW("HourXHour not found", StatusCodes.NOT_FOUND, []);
+    }
+   const hourXhour:any = result.rows.map((row: any) => ({
+    idHourxHour: row[0],
+    hour: row[1],
+    date: row[2],
+    must: row[3],
+    mustAccumulative: row[4],
+    is: row[5],
+    isAccumulative: row[6],
+    diference: row[7],
+    diferenceAcomulative: row[8],
+    idCell: row[9],
+    idUser: row[10],
+   }))
+   const hourXhourResult: ResultVW = new ResultVW(
+     "HourXHour found",
+     StatusCodes.OK,
+     hourXhour
+   );
+   return hourXhourResult;
+  
+  }catch (error) {
     throw error;
   }
 }

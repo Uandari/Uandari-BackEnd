@@ -4,7 +4,8 @@ import {
   getIssueById,
   updateIssue,
   deleteIssue,
-  listOfIssues
+  listOfIssues,
+  issuesXHour
 } from "../controllers/issueController";
 
 const router = express.Router();
@@ -15,5 +16,6 @@ router.get("/getIssueById/:id", getIssueById);
 router.post("/updateIssue", updateIssue);
 router.post("/deleteIssue", deleteIssue);
 router.get("/listIssues", listOfIssues);
+router.post("/issuexhour", issuesXHour)
 
 export default router;

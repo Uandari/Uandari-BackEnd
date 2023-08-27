@@ -1,4 +1,4 @@
-export class HourXHour {
+export class HourXHourModel {
   idHourxHour?: number;
   hour: string;
   date: string;
