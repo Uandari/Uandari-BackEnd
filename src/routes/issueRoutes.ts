@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express';
 import {
   insertIssue,
   getIssueById,
@@ -6,16 +6,17 @@ import {
   deleteIssue,
   listOfIssues,
   issuesXHour
-} from "../controllers/issueController";
+} from '../controllers/issueController';
 
 const router = express.Router();
 
 //Insert Issue
-router.post("/insertIssue", insertIssue);
-router.get("/getIssueById/:id", getIssueById);
-router.post("/updateIssue", updateIssue);
-router.post("/deleteIssue", deleteIssue);
-router.get("/listIssues", listOfIssues);
-router.post("/issuexhour", issuesXHour)
+router.post('/insert', insertIssue);
+router.get('/:id', getIssueById);
+router.post('/update', updateIssue);
+router.post('/delete', deleteIssue);
+//TABLERO
+router.get('/', listOfIssues);
+router.post('/issuexhour', issuesXHour)
 
 export default router;

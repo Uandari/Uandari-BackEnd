@@ -1,23 +1,21 @@
-import express from "express";
+import express from 'express';
 import {
-  insertMustAndGetID,
+  registerHour,
   updateHourxHour,
   getHourxHourById,
   getHourXHourComplete
-} from "../controllers/hourxhourController";
+} from '../controllers/hourxhourController';
 const router = express.Router();
 
 //getHourXHourComplete --> this have the issues
 
-//Insert Must and Get ID
-router.post("/mustAndGetID", insertMustAndGetID);
-//Update Hour
-router.post("/updateHour", updateHourxHour);
-//Get Hour by ID
-router.get("/getHour/:id", getHourxHourById);
-//Get All Hours
-//router.get("/getAllHours", getAllHourxHour);
+//Create a new HourXHour only returns ID
+router.post('/register', registerHour);
+router.get('/', getHourXHourComplete)
+router.post('/update', updateHourxHour);
+router.get('/:id', getHourxHourById);
+//Get All Hours with issues
+//router.get('/getAllHours', getAllHourxHour);
 //Get all hours without issues
-router.get("/getAllHours",getHourXHourComplete)
 
 export default router;

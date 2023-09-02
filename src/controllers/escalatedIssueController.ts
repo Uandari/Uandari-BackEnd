@@ -1,11 +1,11 @@
-import { StatusCodes } from "../common/enums/enums";
-import { Response, Request } from "express";
+import { StatusCodes } from '../common/enums/enums';
+import { Response, Request } from 'express';
 import {
     getEscalatedIssuesOracle,
     insertEscalatedIssueOracle,
     updateEscalatedIssueOracle,
     getEscalatedIssueByIdOracle
-} from "../data/escalatedIssue-data";
+} from '../data/escalatedIssue-data';
 
 const insertEscalatedIssue = async (req: Request, res: Response) => {
     try {

@@ -1,9 +1,9 @@
-import { StatusCodes } from "../common/enums/enums";
-import { Response, Request } from "express";
+import { StatusCodes } from '../common/enums/enums';
+import { Response, Request } from 'express';
 import { 
     getTypeCategoriesOracle,
     getTypeCategoryByIdOracle
-} from "../data/typeCategory-data";
+} from '../data/typeCategory-data';
 
 //Get all Type Categories from Oracle
 const getAllTypeCategories = async (_req: Request, res: Response) => {

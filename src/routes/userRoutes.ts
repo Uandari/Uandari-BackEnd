@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express';
 import {
   registerUser,
   loginUser,
@@ -6,21 +6,16 @@ import {
   updateUser,
   deleteUser,
   getUserById,
-} from "../controllers/userController";
+} from '../controllers/userController';
 
 const router = express.Router();
 
-//Get All Users 
-router.get("/getAllUsers", getAllUsers);
-//Register a new user
-router.post("/registerUser", registerUser);
-//Update a user
-router.post("/updateUser", updateUser);
-//Login a user
-router.post("/loginUser", loginUser);
-//Logig delete a user
-router.post("/deleteUser", deleteUser);
-//Get user by id
-router.get("/getUserById/:id", getUserById);
+
+router.get('/', getAllUsers);
+router.post('/register', registerUser);
+router.post('/update', updateUser);
+router.post('/login', loginUser);
+router.post('/delete', deleteUser);
+router.get('/:id', getUserById);
 
 export default router;

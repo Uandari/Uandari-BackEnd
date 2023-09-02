@@ -1,10 +1,10 @@
-import { LoginUser } from "../common/api-interfaces/loginUser";
-import { ResultVW } from "../common/api-interfaces/result";
-import { UserModel } from "../common/entities/UserModel";
-import { USER_PROCEDURES } from "../common/enums/stored-procedures";
-import { StatusCodes } from "../common/enums/enums";
-import { OracleHelper } from "../handlers/OracleHelper";
-import { generarToken } from "../helpers/TokenHelpers";
+import { LoginUser } from '../common/api-interfaces/loginUser';
+import { ResultVW } from '../common/api-interfaces/result';
+import { UserModel } from '../common/entities/UserModel';
+import { USER_PROCEDURES } from '../common/enums/stored-procedures';
+import { StatusCodes } from '../common/enums/enums';
+import { OracleHelper } from '../handlers/OracleHelper';
+import { generarToken } from '../helpers/TokenHelpers';
 
 //Get all users using Oracle procedure
 export async function getUsersOracle(): Promise<ResultVW> {
@@ -14,7 +14,7 @@ export async function getUsersOracle(): Promise<ResultVW> {
     const result = await db.execute(query);
 
     if (!result.rows) {
-      throw new Error("Query result rows are undefined");
+      throw new Error('Query result rows are undefined');
     }
     const users: UserModel[] = result.rows.map((row: any) => ({
       idUser: row[0],
@@ -32,12 +32,12 @@ export async function getUsersOracle(): Promise<ResultVW> {
 
     if (users.length === 0) {
       return new ResultVW(
-        "There are no users to show",
+        'There are no users to show',
         StatusCodes.NO_CONTENT,
         users
       );
     }
-    return new ResultVW("successfully extracted users", StatusCodes.OK, users);
+    return new ResultVW('successfully extracted users', StatusCodes.OK, users);
   } catch (error) {
     throw error;
   } finally {
@@ -88,13 +88,13 @@ export async function createUserOracle(user: UserModel): Promise<ResultVW> {
     //console.log(plsqlBlock);
     const result = await db.execute(plsqlBlock);
     const userResult: ResultVW = new ResultVW(
-      "User created",
+      'User created',
       StatusCodes.OK,
       user
     );
 
     if (result.rows && result.rows.length === 0) {
-      return new ResultVW("User Problem", StatusCodes.BAD_REQUEST, user);
+      return new ResultVW('User Problem', StatusCodes.BAD_REQUEST, user);
     }
     return userResult;
   } catch (error) {
@@ -110,7 +110,7 @@ export async function getUserByControlNumberOracle(
   const db = await new OracleHelper().createConnection();
   try {
     if (!(await findByNoControl(idUser))) {
-      return new ResultVW("User not found", StatusCodes.NOT_FOUND, []);
+      return new ResultVW('User not found', StatusCodes.NOT_FOUND, []);
     }
     const query = `${USER_PROCEDURES.GETBYCONTROLNUMBER}'${idUser}'`;
     const result: any = await db.execute(query);
@@ -129,12 +129,12 @@ export async function getUserByControlNumberOracle(
     }));
 
     const userResult: ResultVW = new ResultVW(
-      "User found",
+      'User found',
       StatusCodes.OK,
       user
     );
     if (result.rows && result.rows.length === 0) {
-      return new ResultVW("User not found", StatusCodes.NOT_FOUND, user);
+      return new ResultVW('User not found', StatusCodes.NOT_FOUND, user);
     }
     return userResult;
   } catch (error) {
@@ -152,7 +152,7 @@ export async function updateUserOracle(user: UserModel): Promise<ResultVW> {
   try {
     console.log(user.controlNumber);
     if (!(await findByNoControl(parseInt(user.controlNumber)))) {
-      return new ResultVW("User not found", StatusCodes.NOT_FOUND, []);
+      return new ResultVW('User not found', StatusCodes.NOT_FOUND, []);
     }
     const {
       idUser,
@@ -183,7 +183,7 @@ export async function updateUserOracle(user: UserModel): Promise<ResultVW> {
     console.log(query);
     await db.execute(query);
 
-    return new ResultVW("User updated", StatusCodes.OK, user);
+    return new ResultVW('User updated', StatusCodes.OK, user);
   } catch (error) {
     throw error;
   } finally {
@@ -195,7 +195,7 @@ export async function deleteUserOracle(idUser: number): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
     if (!(await findByNoControl(idUser))) {
-      return new ResultVW("User not found", StatusCodes.BAD_REQUEST, []);
+      return new ResultVW('User not found', StatusCodes.BAD_REQUEST, []);
     }
     const query = `
       BEGIN 
@@ -207,7 +207,7 @@ export async function deleteUserOracle(idUser: number): Promise<ResultVW> {
     await db.execute(query);
     const user = await getUserByControlNumberOracle(idUser);
     console.log(user);
-    return new ResultVW("User deleted", StatusCodes.OK, user.vw);
+    return new ResultVW('User deleted', StatusCodes.OK, user.vw);
   } catch (error) {
     throw error;
   } finally {
@@ -244,10 +244,10 @@ export async function loginUserOracle(user: LoginUser): Promise<ResultVW> {
         isDeleted: userRow[10],
       };
       console.log(user);
-      return new ResultVW("User found", StatusCodes.OK, user);
+      return new ResultVW('User found', StatusCodes.OK, user);
     } else {
-      console.log("User not found");
-      return new ResultVW("User not found", StatusCodes.BAD_REQUEST, user);
+      console.log('User not found');
+      return new ResultVW('User not found', StatusCodes.BAD_REQUEST, user);
     }
   } catch (error) {
     throw error;

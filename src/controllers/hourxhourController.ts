@@ -1,15 +1,16 @@
-import { StatusCodes } from "../common/enums/enums";
-import { Response, Request } from "express";
+import { StatusCodes } from '../common/enums/enums';
+import { Response, Request } from 'express';
 import {
   insertMustAndGetIDOracle,
   updateHourXHourOracle,
   getHourXHourByIdOracle,
   getHourXHour
-} from "../data/hourxhour-data";
+} from '../data/hourxhour-data';
+import { HourXHourModel } from 'src/common/entities/HourxHourModel';
 
 //getAllHourXHourOracle
 
-const insertMustAndGetID = async (req: Request, res: Response) => {
+const registerHour = async (req: Request, res: Response) => {
   try {
     const hourXhour = {
       must: req.body.must,
@@ -28,19 +29,18 @@ const insertMustAndGetID = async (req: Request, res: Response) => {
     });
   }
 };
-
 const updateHourxHour = async (req: Request, res: Response) => {
   try {
-    const hourXhour = {
+    const hourXhour: HourXHourModel = {
       idHourxHour: parseInt(req.body.idHourxHour),
       hour: req.body.hour,
       date: req.body.date,
       must: req.body.must,
-      mustAcomulative: req.body.mustAccumulative,
+      mustAccumulative: req.body.mustAccumulative, // Corrected property name
       is: req.body.is,
-      isAcomulative: req.body.isAccumulative,
-      diference: req.body.diference,
-      diferenceAcomulative: req.body.accumulativeDifference,
+      isAccumulative: req.body.isAccumulative, // Corrected property name
+      difference: req.body.difference,
+      accumulativeDifference: req.body.accumulativeDifference, // Corrected property name
       idCell: req.body.idCell,
       idUser: req.body.idUser,
     };
@@ -59,6 +59,7 @@ const updateHourxHour = async (req: Request, res: Response) => {
     });
   }
 };
+
 
 const getHourxHourById = async (req: Request, res: Response) => {
   try {
@@ -115,7 +116,7 @@ const getHourXHourComplete = async (_req: Request, res: Response) => {
 }
 
 export {
-  insertMustAndGetID,
+  registerHour,
   updateHourxHour,
   getHourxHourById,
   getHourXHourComplete
