@@ -1,8 +1,8 @@
-import { OracleHelper } from "../handlers/OracleHelper";
-import { EscalatedIssuesModel } from "../common/entities/EscalatedIssuesModel";
-import { ResultVW } from "../common/api-interfaces/result";
-import { ESCALATEDISSUES_PROCEDURES } from "../common/enums/stored-procedures";
-import { StatusCodes } from "../common/enums/enums";
+import { OracleHelper } from '../handlers/OracleHelper';
+import { EscalatedIssuesModel } from '../common/entities/EscalatedIssuesModel';
+import { ResultVW } from '../common/api-interfaces/result';
+import { ESCALATEDISSUES_PROCEDURES } from '../common/enums/stored-procedures';
+import { StatusCodes } from '../common/enums/enums';
 
 //Get all Escalated Issues using Oracle Procedures
 export async function getEscalatedIssuesOracle(): Promise<ResultVW> {
@@ -11,7 +11,7 @@ export async function getEscalatedIssuesOracle(): Promise<ResultVW> {
         const query = `${ESCALATEDISSUES_PROCEDURES.GET_ESCALATEDISSUES}`;
         const result = await db.execute(query);
         if (!result.rows) {
-            throw new Error("Query result rows are undefined")
+            throw new Error('Query result rows are undefined')
         }
         const EscalatedIssues: EscalatedIssuesModel[] = result.rows.map((EscalatedIssue: any) => ({
             idIssueScaled: EscalatedIssue[0],
@@ -27,12 +27,12 @@ export async function getEscalatedIssuesOracle(): Promise<ResultVW> {
         }));
         if (EscalatedIssues.length === 0) {
             return new ResultVW(
-                "There are no Escalated Issues to show",
+                'There are no Escalated Issues to show',
                 StatusCodes.NO_CONTENT,
                 EscalatedIssues
             );
         }
-        return new ResultVW("Escalated Issues Found", StatusCodes.OK, EscalatedIssues);
+        return new ResultVW('Escalated Issues Found', StatusCodes.OK, EscalatedIssues);
     } catch (error) {
         throw error;
     } finally {
@@ -69,7 +69,7 @@ export async function insertEscalatedIssueOracle(escalatedIssue: EscalatedIssues
         console.log(query);
         await db.execute(query);
         const escalatedIssueResult: ResultVW = new ResultVW(
-            "Escalated Issue added",
+            'Escalated Issue added',
             StatusCodes.OK,
             escalatedIssue
         );
@@ -98,7 +98,7 @@ export async function getEscalatedIssueByIdOracle(idIssueScaled: number): Promis
     const db = await new OracleHelper().createConnection();
     try {
         if (!await verifyIssueScaled(idIssueScaled)) {
-            return new ResultVW("Escalated Issue not found", StatusCodes.NOT_FOUND, []);
+            return new ResultVW('Escalated Issue not found', StatusCodes.NOT_FOUND, []);
         }
         const query = `${ESCALATEDISSUES_PROCEDURES.GETBYID}(${idIssueScaled})`;
         const result: any = await db.execute(query);
@@ -115,7 +115,7 @@ export async function getEscalatedIssueByIdOracle(idIssueScaled: number): Promis
             idIssue: row[9]
         }));
         const escalatedIssueResult: ResultVW = new ResultVW(
-            "Escalated Issue found",
+            'Escalated Issue found',
             StatusCodes.OK,
             escalatedIssue
         );
@@ -158,14 +158,14 @@ export async function updateEscalatedIssueOracle(escalatedIssue: EscalatedIssues
         await db.execute(query);
         let escalatedIssueResult: ResultVW;
 
-        if (typeof idIssueScaled === "number"){
+        if (typeof idIssueScaled === 'number'){
             escalatedIssueResult = await getEscalatedIssueByIdOracle(idIssueScaled);
             if (escalatedIssueResult.vw.length === 0){
-                return new ResultVW("Escalated Issue not found", StatusCodes.NOT_FOUND, escalatedIssueResult.vw);
+                return new ResultVW('Escalated Issue not found', StatusCodes.NOT_FOUND, escalatedIssueResult.vw);
             }
-            return new ResultVW("Escalated Issue updated", StatusCodes.OK, escalatedIssueResult.vw);
+            return new ResultVW('Escalated Issue updated', StatusCodes.OK, escalatedIssueResult.vw);
         }
-        return new ResultVW("Something went wrong ", StatusCodes.NOT_FOUND, []);
+        return new ResultVW('Something went wrong ', StatusCodes.NOT_FOUND, []);
     }
     catch (error) {
         throw error;

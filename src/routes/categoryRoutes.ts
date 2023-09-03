@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express';
 import {
   getAllCategories,
   getCategoryById,
@@ -7,18 +7,19 @@ import {
   getIssuesXQuality,
   getIssuesXPerformance,
   getRecentIssues,
-} from "../controllers/categoryController";
+} from '../controllers/categoryController';
 
 const router = express.Router();
 
+router.get('/issues', getStatusIssues);
+router.get('/availability', getIssuesXAvailability);
+router.get('/quality', getIssuesXQuality);
+router.get('/performance', getIssuesXPerformance);
+router.get('/recentIssues', getRecentIssues);
 //Get all categories
-router.get("/getAllCategories", getAllCategories);
-router.get("/getCategoryById/:id", getCategoryById);
-//Tablero hrxhr lado derecho
-router.get("/getStatusIssues", getStatusIssues);
-router.get("/getIssuesXAvailability", getIssuesXAvailability);
-router.get("/getIssuesXQuality", getIssuesXQuality);
-router.get("/getIssuesXPerformance", getIssuesXPerformance);
-router.get("/getRecentIssues", getRecentIssues);
+router.get('/', getAllCategories);
+router.get('/:id', getCategoryById);
+
+
 
 export default router;

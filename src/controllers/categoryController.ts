@@ -1,5 +1,5 @@
-import { StatusCodes } from "../common/enums/enums";
-import { Response, Request } from "express";
+import { StatusCodes } from '../common/enums/enums';
+import { Response, Request } from 'express';
 import {
   getCategoriesOracle,
   getCategoryByIdOracle,
@@ -8,7 +8,7 @@ import {
   getIssuesXQualityOracle,
   getIssuesXPerformanceOracle,
   getRecentIssuesOracle,
-} from "../data/category-data";
+} from '../data/category-data';
 
 const getAllCategories = async (_req: Request, res: Response) => {
   try {
@@ -46,6 +46,7 @@ const getCategoryById = async (req: Request, res: Response) => {
 };
 
 const getStatusIssues = async (_req: Request, res: Response) => {
+  console.log('entro');
   try {
     const statusIssues = await getStatusIssuesOracle();
     res.status(statusIssues.statusCode).json({

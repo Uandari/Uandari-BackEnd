@@ -1,12 +1,12 @@
-import express from "express";
+import express from 'express';
 import {
     getAllTypeCategories,
     getTypeCategoryById
-} from "../controllers/typeCategoryController";
+} from '../controllers/typeCategoryController';
 
 const router = express.Router();
 
-router.get("/getAllTypeCategories", getAllTypeCategories);
-router.get("/getTypeCategoryById/:id", getTypeCategoryById);
+router.get('/', getAllTypeCategories);
+router.get('/:id', getTypeCategoryById);
 
 export default router;

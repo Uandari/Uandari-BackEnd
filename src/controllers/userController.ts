@@ -1,5 +1,5 @@
-import { StatusCodes } from "../common/enums/enums";
-import { Response, Request } from "express";
+import { StatusCodes } from '../common/enums/enums';
+import { Response, Request } from 'express';
 import {
   createUserOracle,
   updateUserOracle,
@@ -8,7 +8,7 @@ import {
   findByNoControl,
   deleteUserOracle,
   getUserByControlNumberOracle,
-} from "../data/user-data";
+} from '../data/user-data';
 //Get all users
 const getAllUsers = async (_req: Request, res: Response) => {
   try {
@@ -41,7 +41,7 @@ const registerUser = async (req: Request, res: Response) => {
       imageUrl: req.body.imageUrl,
     };
     if (!isId) {
-      console.log("User:", user);
+      console.log('User:', user);
       const usercreated = await createUserOracle(user);
       res.status(usercreated.statusCode).json({
         status: usercreated.statusCode,
@@ -51,7 +51,7 @@ const registerUser = async (req: Request, res: Response) => {
     } else {
       res.status(StatusCodes.BAD_REQUEST).json({
         status: StatusCodes.BAD_REQUEST,
-        message: "El numero de control ya existe",
+        message: 'El numero de control ya existe',
         payload: [],
       });
     }

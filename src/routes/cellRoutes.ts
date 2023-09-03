@@ -1,11 +1,11 @@
-import express  from "express";
-import { getAllCells, registerCell } from "../controllers/cellController";
+import express from 'express';
+import { getAllCells, registerCell } from '../controllers/cellController';
 
 const router = express.Router();
 
 //Get all cells
-router.get("/getAllCells", getAllCells);
+router.get('/', getAllCells);
 //Insert cell
-router.post("/registerCell", registerCell);
+router.post('/register', registerCell);
 
 export default router;

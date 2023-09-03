@@ -1,5 +1,5 @@
-import { StatusCodes } from "../common/enums/enums";
-import { Response, Request } from "express";
+import { StatusCodes } from '../common/enums/enums';
+import { Response, Request } from 'express';
 import {
   insertIssueOracle,
   getIssueByIdOracle,
@@ -7,7 +7,7 @@ import {
   deleteIssueOracle,
   listOfIssuesOracle,
   issueXIdHourxHour
-} from "../data/issue-data";
+} from '../data/issue-data';
 
 const insertIssue = async (req: Request, res: Response) => {
   try {

@@ -1,12 +1,12 @@
-import { StatusCodes } from "../common/enums/enums";
-import { Response, Request } from "express";
+import { StatusCodes } from '../common/enums/enums';
+import { Response, Request } from 'express';
 import {
   getRolesOracle,
   createRoleOracle,
   getRoleByIdOracle,
   deleteRoleByIdOracle,
   updateRoleOracle,
-} from "../data/role-data";
+} from '../data/role-data';
 
 //Get All Roles from Oracle
 const getAllRoles = async (_req: Request, res: Response) => {
@@ -67,9 +67,7 @@ const getRoleById = async (req: Request, res: Response) => {
 const deleteRole = async (req: Request, res: Response) => {
   try {
     const idRole = parseInt(req.body.idRole);
-
     const roleDeleted = await deleteRoleByIdOracle(idRole);
-
     res.status(roleDeleted.statusCode).json({
       status: roleDeleted.statusCode,
       message: roleDeleted.message,
@@ -103,4 +101,4 @@ const updateRole = async (req: Request, res: Response) => {
     });
   }
 };
-export { getAllRoles, registerRole, getRoleById, deleteRole,updateRole };
+export { getAllRoles, registerRole, getRoleById, deleteRole, updateRole };

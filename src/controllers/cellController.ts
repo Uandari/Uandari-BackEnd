@@ -1,9 +1,9 @@
-import { StatusCodes } from "../common/enums/enums";
-import { Response, Request } from "express";
+import { StatusCodes } from '../common/enums/enums';
+import { Response, Request } from 'express';
 import {
   getCellsOracle,
   insertCellOracle,
-} from "../data/cell-data";
+} from '../data/cell-data';
 
 //Get All Cells 
 const getAllCells = async (_req: Request, res: Response) => {

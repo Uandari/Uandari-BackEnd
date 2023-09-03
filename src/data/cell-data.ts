@@ -1,8 +1,8 @@
-import { OracleHelper } from "../handlers/OracleHelper";
-import { CellModel } from "../common/entities/CellModel";
-import { ResultVW } from "../common/api-interfaces/result";
-import { CELL_PROCEDURES } from "../common/enums/stored-procedures";
-import { StatusCodes } from "../common/enums/enums";
+import { OracleHelper } from '../handlers/OracleHelper';
+import { CellModel } from '../common/entities/CellModel';
+import { ResultVW } from '../common/api-interfaces/result';
+import { CELL_PROCEDURES } from '../common/enums/stored-procedures';
+import { StatusCodes } from '../common/enums/enums';
 
 //Get all cells using Oracle procedure
 export async function getCellsOracle(): Promise<ResultVW> {
@@ -12,7 +12,7 @@ export async function getCellsOracle(): Promise<ResultVW> {
     const result = await db.execute(query);
 
     if (!result.rows) {
-      throw new Error("Query result rows are undefined");
+      throw new Error('Query result rows are undefined');
     }
     const cells: CellModel[] = result.rows.map((row: any) => ({
       idCell: row[0],
@@ -23,12 +23,12 @@ export async function getCellsOracle(): Promise<ResultVW> {
 
     if (cells.length === 0) {
       return new ResultVW(
-        "There are no cells to show",
+        'There are no cells to show',
         StatusCodes.NO_CONTENT,
         cells
       );
     }
-    return new ResultVW("successfully extracted cells", StatusCodes.OK, cells);
+    return new ResultVW('successfully extracted cells', StatusCodes.OK, cells);
   } catch (error) {
     throw error;
   } finally {
@@ -39,7 +39,7 @@ export async function getCellsOracle(): Promise<ResultVW> {
 export async function insertCellOracle(cell: CellModel): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
-    const {cellName, idUser, idLine} = cell;
+    const { cellName, idUser, idLine } = cell;
     const query = `BEGIN
     ${CELL_PROCEDURES.INSERT_CELL}(
         '${cellName}',
@@ -49,7 +49,7 @@ export async function insertCellOracle(cell: CellModel): Promise<ResultVW> {
     END;`;
     await db.execute(query);
     const cellResult: ResultVW = new ResultVW(
-      "Cell created",
+      'Cell created',
       StatusCodes.OK,
       cell
     );

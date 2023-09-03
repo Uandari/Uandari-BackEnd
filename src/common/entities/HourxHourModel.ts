@@ -3,11 +3,11 @@ export class HourXHourModel {
   hour: string;
   date: string;
   must: number;
-  mustAcomulative: number;
+  mustAccumulative: number;
   is: number;
-  isAcomulative: number;
-  diference: number;
-  diferenceAcomulative: number;
+  isAccumulative: number;
+  difference: number;
+  accumulativeDifference: number;
   idCell: number;
   idUser: number;
 
@@ -17,9 +17,9 @@ export class HourXHourModel {
     must: number,
     mustAccumulative: number,
     is: number,
-    isAcomulative: number,
-    diference: number,
-    diferenceAcomulative: number,
+    isAccumulative: number,
+    difference: number,
+    accumulativeDifference: number,
     idUser: number,
     idCell: number,
     idHourxHour?: number
@@ -27,11 +27,11 @@ export class HourXHourModel {
     this.hour = hour;
     this.date = date;
     this.must = must;
-    this.mustAcomulative = mustAccumulative;
+    this.mustAccumulative = mustAccumulative;
     this.is = is;
-    this.isAcomulative = isAcomulative;
-    this.diference = diference;
-    this.diferenceAcomulative = diferenceAcomulative;
+    this.isAccumulative = isAccumulative;
+    this.difference = difference;
+    this.accumulativeDifference = accumulativeDifference;
     this.idCell = idCell;
     this.idUser = idUser;
     this.idHourxHour = idHourxHour;

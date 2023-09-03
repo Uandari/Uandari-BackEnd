@@ -1,8 +1,8 @@
-import { OracleHelper } from "../handlers/OracleHelper";
-import { IssueModel } from "../common/entities/IssueModel";
-import { ResultVW } from "../common/api-interfaces/result";
-import { ISSUE_PROCEDURES } from "../common/enums/stored-procedures";
-import { StatusCodes } from "../common/enums/enums";
+import { OracleHelper } from '../handlers/OracleHelper';
+import { IssueModel } from '../common/entities/IssueModel';
+import { ResultVW } from '../common/api-interfaces/result';
+import { ISSUE_PROCEDURES } from '../common/enums/stored-procedures';
+import { StatusCodes } from '../common/enums/enums';
 
 //Insert a new issue using Oracle procedure
 
@@ -40,7 +40,7 @@ export async function insertIssueOracle(issue: IssueModel): Promise<ResultVW> {
     console.log(query);
     await db.execute(query);
     const issueResult: ResultVW = new ResultVW(
-      "Issue created",
+      'Issue created',
       StatusCodes.OK,
       issue
     );
@@ -66,7 +66,7 @@ export async function getIssueByIdOracle(idIssue: number): Promise<ResultVW> {
     const db = await new OracleHelper().createConnection();
 
     if (!(await verifyIssueOracle(idIssue))) {
-      return new ResultVW("Issue not found", StatusCodes.NOT_FOUND, []);
+      return new ResultVW('Issue not found', StatusCodes.NOT_FOUND, []);
     }
 
     const query = `${ISSUE_PROCEDURES.GETBYID}(${idIssue})`;
@@ -86,7 +86,7 @@ export async function getIssueByIdOracle(idIssue: number): Promise<ResultVW> {
       idUser: row[11],
     }));
     const issueResult: ResultVW = new ResultVW(
-      "Issue found",
+      'Issue found',
       StatusCodes.OK,
       issue
     );
@@ -130,14 +130,14 @@ export async function updateIssueOracle(issue: IssueModel): Promise<ResultVW> {
 
     await db.execute(query);
     let issueResult: ResultVW;
-    if (typeof idIssue === "number") {
+    if (typeof idIssue === 'number') {
       issueResult = await getIssueByIdOracle(idIssue);
       if (issueResult.vw.length === 0) {
-        return new ResultVW("Issue not found", StatusCodes.NOT_FOUND, []);
+        return new ResultVW('Issue not found', StatusCodes.NOT_FOUND, []);
       }
-      return new ResultVW("Issue updated", StatusCodes.OK, issueResult.vw);
+      return new ResultVW('Issue updated', StatusCodes.OK, issueResult.vw);
     }
-    return new ResultVW("Something went wrong ", StatusCodes.NOT_FOUND, []);
+    return new ResultVW('Something went wrong ', StatusCodes.NOT_FOUND, []);
   } catch (error) {
     throw error;
   }
@@ -146,15 +146,17 @@ export async function updateIssueOracle(issue: IssueModel): Promise<ResultVW> {
 export async function deleteIssueOracle(idIssue: number): Promise<ResultVW> {
   try {
     const db = await new OracleHelper().createConnection();
+    console.log(idIssue)
     if (!(await verifyIssueOracle(idIssue))) {
-      return new ResultVW("Issue not found", StatusCodes.NOT_FOUND, []);
+      return new ResultVW('Issue not found', StatusCodes.NOT_FOUND, []);
     }
     const query = `BEGIN
     ${ISSUE_PROCEDURES.DELETE_ISSUE}(${idIssue});
     END;`;
+    console.log(query);
     await db.execute(query);
     const issue = await getIssueByIdOracle(idIssue);
-    return new ResultVW("Issue deleted", StatusCodes.OK, issue.vw);
+    return new ResultVW('Issue deleted', StatusCodes.OK, issue.vw);
   } catch (error) {
     throw error;
   }
@@ -198,9 +200,9 @@ export async function listOfIssuesOracle(): Promise<ResultVW> {
             day: day,
             shifts: {
               [shift]: enginesAffected,
-              "A": [],
-              "B": [],
-              "C": [],
+              'A': [],
+              'B': [],
+              'C': [],
             }
           });
         }
@@ -213,9 +215,9 @@ export async function listOfIssuesOracle(): Promise<ResultVW> {
               day: day,
               shifts: {
                 [shift]: [enginesAffected],
-                "A": [],
-                "B": [],
-                "C": [],
+                'A': [],
+                'B': [],
+                'C': [],
               }
             }
           ]
@@ -225,7 +227,7 @@ export async function listOfIssuesOracle(): Promise<ResultVW> {
 
     const groupedPayload = Object.values(groupedIssues);
     const issueResult: ResultVW = new ResultVW(
-      "Issues found",
+      'Issues found',
       StatusCodes.OK,
       groupedPayload
     );
@@ -251,18 +253,18 @@ export async function issueXIdHourxHour(idIssue: number): Promise<ResultVW> {
   try {
     const db = await new OracleHelper().createConnection();
     if (!(await verifyIssueHourXHourOracle(idIssue))) {
-      return new ResultVW("No issue at this time", StatusCodes.BAD_REQUEST, []);
+      return new ResultVW('No issue at this time', StatusCodes.BAD_REQUEST, []);
     }
     const query = `${ISSUE_PROCEDURES.GETISSUESBYHOURS}(${idIssue})`;
     const result: any = await db.execute(query);
     const issue: IssueModel = result.rows.map((row: any) => ({
       idIssue: row[0],
-      idHourXHour:row[1],
+      idHourXHour: row[1],
       description_: row[6],
       typeCategory: row[12]
     }));
     const issueResult: ResultVW = new ResultVW(
-      "Issue found",
+      'Issue found',
       StatusCodes.OK,
       issue
     );
@@ -271,7 +273,7 @@ export async function issueXIdHourxHour(idIssue: number): Promise<ResultVW> {
   catch (error) {
     throw error;
   }
-  
+
 }
 
 
