@@ -3,10 +3,10 @@ import {
     getAllTypeCategories,
     getTypeCategoryById
 } from '../controllers/typeCategoryController';
-
+import checkAuth from 'src/middlewares/checkAuth';
 const router = express.Router();
 
-router.get('/', getAllTypeCategories);
-router.get('/:id', getTypeCategoryById);
+router.get('/', checkAuth, getAllTypeCategories);
+router.get('/:id', checkAuth, getTypeCategoryById);
 
 export default router;

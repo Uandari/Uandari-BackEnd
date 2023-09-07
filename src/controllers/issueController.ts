@@ -9,7 +9,7 @@ import {
   issueXIdHourxHour
 } from '../data/issue-data';
 
-const insertIssue = async (req: Request, res: Response) => {
+const createIssue = async (req: Request, res: Response) => {
   try {
     const issue = {
       idHourXHour: parseInt(req.body.idHourXHour),
@@ -136,4 +136,4 @@ const issuesXHour = async (req: Request, res: Response) => {
     });
   }
 };
-export { insertIssue, getIssueById, updateIssue, deleteIssue, listOfIssues, issuesXHour };
+export { createIssue, getIssueById, updateIssue, deleteIssue, listOfIssues, issuesXHour };

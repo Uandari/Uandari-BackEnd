@@ -7,7 +7,7 @@ import {
     getEscalatedIssueByIdOracle
 } from '../data/escalatedIssue-data';
 
-const insertEscalatedIssue = async (req: Request, res: Response) => {
+const createEscalatedIssue = async (req: Request, res: Response) => {
     try {
         const escalatedIssue = {
             dateScaling: req.body.dateScaling,
@@ -99,4 +99,4 @@ const getEscalatedIssueById = async (req: Request, res: Response) => {
     }
 }
 
-export { insertEscalatedIssue, getAllEscalatedIssues, updateEscalatedIssue, getEscalatedIssueById };
+export { createEscalatedIssue, getAllEscalatedIssues, updateEscalatedIssue, getEscalatedIssueById };

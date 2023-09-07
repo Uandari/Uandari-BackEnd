@@ -5,6 +5,7 @@ import { USER_PROCEDURES } from '../common/enums/stored-procedures';
 import { StatusCodes } from '../common/enums/enums';
 import { OracleHelper } from '../handlers/OracleHelper';
 import { generarToken } from '../helpers/TokenHelpers';
+import generarJWT from '../helpers/generarJWT';
 
 //Get all users using Oracle procedure
 export async function getUsersOracle(): Promise<ResultVW> {
@@ -50,6 +51,7 @@ export async function findByNoControl(controlNumber: number): Promise<boolean> {
   try {
     const query = `${USER_PROCEDURES.GETBYCONTROLNUMBER} '${controlNumber}'`;
     const resultNoControl: any = await db.execute(query);
+    console.log(query)
     return resultNoControl.rows.length > 0; //true or false
   } catch (error) {
     throw error;
@@ -190,7 +192,7 @@ export async function updateUserOracle(user: UserModel): Promise<ResultVW> {
     db.close();
   }
 }
-//Logig delete a user using Oracle procedure
+//Delete a user using Oracle procedure
 export async function deleteUserOracle(idUser: number): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
@@ -238,9 +240,7 @@ export async function loginUserOracle(user: LoginUser): Promise<ResultVW> {
         mail: userRow[4],
         password: userRow[5],
         idRole: userRow[6],
-        token: userRow[7],
-        verifiedAccount: userRow[8],
-        imageUrl: userRow[9],
+        token: generarJWT(userRow[3]),
         isDeleted: userRow[10],
       };
       console.log(user);
@@ -255,3 +255,5 @@ export async function loginUserOracle(user: LoginUser): Promise<ResultVW> {
     db.release();
   }
 }
+
+

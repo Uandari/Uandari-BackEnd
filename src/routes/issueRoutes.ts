@@ -1,22 +1,22 @@
 import express from 'express';
 import {
-  insertIssue,
+  createIssue,
   getIssueById,
   updateIssue,
   deleteIssue,
   listOfIssues,
   issuesXHour
 } from '../controllers/issueController';
-
+import checkAuth from 'src/middlewares/checkAuth';
 const router = express.Router();
 
 //Insert Issue
-router.post('/insert', insertIssue);
-router.get('/:id', getIssueById);
-router.post('/update', updateIssue);
-router.post('/delete', deleteIssue);
+router.post('/create', checkAuth, createIssue);
+router.get('/:id', checkAuth, getIssueById);
+router.post('/update', checkAuth, updateIssue);
+router.post('/delete', checkAuth, deleteIssue);
 //TABLERO
-router.get('/', listOfIssues);
-router.post('/issuexhour', issuesXHour)
+router.get('/', checkAuth, listOfIssues);
+router.post('/issuexhour', checkAuth, issuesXHour)
 
 export default router;

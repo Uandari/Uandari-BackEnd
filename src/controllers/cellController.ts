@@ -23,7 +23,7 @@ const getAllCells = async (_req: Request, res: Response) => {
   }
 };
 //Register Cell
-const registerCell = async (req: Request, res: Response) => {
+const createCell = async (req: Request, res: Response) => {
   try {
     const cell = {
       cellName: req.body.cellName,
@@ -46,4 +46,4 @@ const registerCell = async (req: Request, res: Response) => {
   }
 };
 
-export { getAllCells, registerCell };
+export { getAllCells, createCell };
