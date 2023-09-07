@@ -799,3 +799,52 @@ EXCEPTION
     ROLLBACK;
     RAISE;
 END UpdateHourxHour;
+
+--Añadir el campo de isDelete a Cell
+
+ALTER TABLE Cell
+ADD isDelete NUMBER(1,0) DEFAULT 0;
+
+/*
+    Opdate cell sp
+*/
+
+CREATE OR REPLACE PROCEDURE UPDATECELL(
+    p_idCell IN NUMBER,
+    p_cellName IN VARCHAR2,
+    p_idUser IN NUMBER,
+    p_idLine IN NUMBER
+) AS
+BEGIN
+    UPDATE Cell
+    SET cellName = p_cellName,
+        idUser = p_idUser,
+        idLine = p_idLine
+    WHERE idCell = p_idCell;
+
+    COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END UPDATECELL;
+
+
+/*
+    Delete cell sp
+*/
+
+CREATE OR REPLACE PROCEDURE DELETECELL(
+    p_idCell IN NUMBER
+) AS
+BEGIN
+    UPDATE Cell
+    SET isDelete = 1
+    WHERE idCell = p_idCell;
+
+    COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END DELETECELL;
