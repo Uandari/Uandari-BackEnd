@@ -7,6 +7,6 @@ const router = express.Router();
 //Get all cells
 router.get('/', checkAuth, getAllCells);
 //Insert cell
-router.post('/create', checkAuth,createCell);
+router.post('/create', checkAuth, createCell);
 
 export default router;

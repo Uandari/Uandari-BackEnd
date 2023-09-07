@@ -6,7 +6,7 @@ import {
   deleteRole,
   updateRole,
 } from '../controllers/roleController';
-import checkAuth from 'src/middlewares/checkAuth';
+import checkAuth from '../middlewares/checkAuth';
 
 const router = express.Router();
 

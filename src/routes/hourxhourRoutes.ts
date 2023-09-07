@@ -6,7 +6,7 @@ import {
   getHourXHourComplete
 } from '../controllers/hourxhourController';
 const router = express.Router();
-import checkAuth from 'src/middlewares/checkAuth';
+import checkAuth from '../middlewares/checkAuth';
 //getHourXHourComplete --> this have the issues
 
 //Create a new HourXHour only returns ID

@@ -5,7 +5,7 @@ import {
     updateEscalatedIssue,
     getEscalatedIssueById
 } from '../controllers/escalatedIssueController';
-import checkAuth from 'src/middlewares/checkAuth';
+import checkAuth from '../middlewares/checkAuth';
 const router = express.Router();
 
 //Get All Escalated Issues
