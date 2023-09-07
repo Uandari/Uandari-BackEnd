@@ -8,18 +8,16 @@ import {
   getIssuesXPerformance,
   getRecentIssues,
 } from '../controllers/categoryController';
-
+import checkAuth from 'src/middlewares/checkAuth';
 const router = express.Router();
 
-router.get('/issues', getStatusIssues);
-router.get('/availability', getIssuesXAvailability);
-router.get('/quality', getIssuesXQuality);
-router.get('/performance', getIssuesXPerformance);
-router.get('/recentIssues', getRecentIssues);
+router.get('/issues', checkAuth, getStatusIssues);
+router.get('/availability', checkAuth, getIssuesXAvailability);
+router.get('/quality', checkAuth, getIssuesXQuality);
+router.get('/performance', checkAuth, getIssuesXPerformance);
+router.get('/recentIssues', checkAuth, getRecentIssues);
 //Get all categories
-router.get('/', getAllCategories);
-router.get('/:id', getCategoryById);
-
-
+router.get('/', checkAuth, getAllCategories);
+router.get('/:id', checkAuth, getCategoryById);
 
 export default router;

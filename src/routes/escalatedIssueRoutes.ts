@@ -1,19 +1,18 @@
 import express from 'express';
 import {
-    insertEscalatedIssue,
+    createEscalatedIssue,
     getAllEscalatedIssues,
     updateEscalatedIssue,
     getEscalatedIssueById
 } from '../controllers/escalatedIssueController';
-
+import checkAuth from 'src/middlewares/checkAuth';
 const router = express.Router();
 
 //Get All Escalated Issues
-router.get('/', getAllEscalatedIssues);
-router.post('/insert', insertEscalatedIssue);
-router.post('/update', updateEscalatedIssue);
-router.get('/:id', getEscalatedIssueById);
-//Insert Escalated Issue
+router.get('/', checkAuth, getAllEscalatedIssues);
+router.post('/create', checkAuth, createEscalatedIssue);
+router.post('/update', checkAuth, updateEscalatedIssue);
+router.get('/:id', checkAuth, getEscalatedIssueById);
 
 
 export default router;

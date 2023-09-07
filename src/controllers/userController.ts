@@ -27,10 +27,11 @@ const getAllUsers = async (_req: Request, res: Response) => {
   }
 };
 //Register a new user
-const registerUser = async (req: Request, res: Response) => {
+const createUser = async (req: Request, res: Response) => {
   try {
     const controlNumber = req.body.controlNumber;
     const isId = await findByNoControl(controlNumber);
+    console.log(isId);
     const user = {
       name: req.body.name,
       lastNames: req.body.lastNames,
@@ -154,7 +155,7 @@ const getUserById = async (req: Request, res: Response) => {
 };
 
 export {
-  registerUser,
+  createUser,
   loginUser,
   updateUser,
   getAllUsers,

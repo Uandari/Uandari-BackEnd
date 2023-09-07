@@ -25,7 +25,7 @@ const getAllRoles = async (_req: Request, res: Response) => {
     });
   }
 };
-const registerRole = async (req: Request, res: Response) => {
+const createRole = async (req: Request, res: Response) => {
   try {
     const role = {
       name: req.body.name,
@@ -101,4 +101,4 @@ const updateRole = async (req: Request, res: Response) => {
     });
   }
 };
-export { getAllRoles, registerRole, getRoleById, deleteRole, updateRole };
+export { getAllRoles, createRole, getRoleById, deleteRole, updateRole };

@@ -10,7 +10,7 @@ import { HourXHourModel } from 'src/common/entities/HourxHourModel';
 
 //getAllHourXHourOracle
 
-const registerHour = async (req: Request, res: Response) => {
+const createHour = async (req: Request, res: Response) => {
   try {
     const hourXhour = {
       must: req.body.must,
@@ -116,7 +116,7 @@ const getHourXHourComplete = async (_req: Request, res: Response) => {
 }
 
 export {
-  registerHour,
+  createHour,
   updateHourxHour,
   getHourxHourById,
   getHourXHourComplete

@@ -1,29 +1,42 @@
-import jwt from "jsonwebtoken";
+import jwt, { Secret } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
+import { findByNoControl } from "../data/user-data"; // Asegúrate de importar el modelo de usuario adecuado para Oracle
 
-const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.headers.authorization);
+// Define una interfaz personalizada que extienda la interfaz 'Request'
+interface CustomRequest extends Request {
+  usuario?: any; // Puedes especificar el tipo adecuado para 'usuario' según tu modelo de datos
+}
+
+const checkAuth = async (req: CustomRequest, res: Response, next: NextFunction) => {
   let token;
-  let secret: string | undefined;
-
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
-      secret = process.env.JWT_SECRET;
-      const decoded = jwt.verify(token, secret || token);
-      console.log(decoded);
+      console.log("ESTE ES EL TOKEN:", token);
+      const secret: Secret = process.env.JWT_SECRET || "";
+      const decoded: any = jwt.verify(token, secret);
+      console.log("Este es el dedoced", decoded.id)
+      const user = await findByNoControl(decoded.id);
+      if (!user) {
+        throw new Error("User not found");
+      }
+      req.usuario = user;
+      console.log("Este es el user", user)
       return next();
     } catch (error) {
-      return res.status(404).json({ mensaje: "Hubo un error" });
+      return res.status(404).json({ msg: "Hubo un error" });
     }
   }
+
   if (!token) {
-    const error = new Error("Token no valido");
+    const error = new Error("Token no válido");
     return res.status(401).json({ msg: error.message });
   }
+
   next();
 };
+
 export default checkAuth;
