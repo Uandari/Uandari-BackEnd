@@ -20,7 +20,7 @@ export async function getRolesOracle(): Promise<ResultVW> {
     if (roles.length === 0) {
       return new ResultVW(
         'There are no toles to show',
-        StatusCodes.NO_CONTENT,
+        StatusCodes.NOT_FOUND,
         roles
       );
     }

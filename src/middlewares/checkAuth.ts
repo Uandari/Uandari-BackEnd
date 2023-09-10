@@ -15,16 +15,13 @@ const checkAuth = async (req: CustomRequest, res: Response, next: NextFunction) 
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
-      console.log("ESTE ES EL TOKEN:", token);
       const secret: Secret = process.env.JWT_SECRET || "";
       const decoded: any = jwt.verify(token, secret);
-      console.log("Este es el dedoced", decoded.id)
       const user = await findByNoControl(decoded.id);
       if (!user) {
         throw new Error("User not found");
       }
       req.usuario = user;
-      console.log("Este es el user", user)
       return next();
     } catch (error) {
       return res.status(404).json({ msg: "Hubo un error" });

@@ -7,7 +7,7 @@ import { OracleHelper } from '../handlers/OracleHelper';
 import { generarToken } from '../helpers/TokenHelpers';
 import generarJWT from '../helpers/generarJWT';
 
-//Get all users using Oracle procedure
+
 export async function getUsersOracle(): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
@@ -34,7 +34,7 @@ export async function getUsersOracle(): Promise<ResultVW> {
     if (users.length === 0) {
       return new ResultVW(
         'There are no users to show',
-        StatusCodes.NO_CONTENT,
+        StatusCodes.NOT_FOUND,
         users
       );
     }
@@ -45,13 +45,12 @@ export async function getUsersOracle(): Promise<ResultVW> {
     db.release();
   }
 }
-//Get a user by Numero Control
+
 export async function findByNoControl(controlNumber: number): Promise<boolean> {
   const db = await new OracleHelper().createConnection();
   try {
     const query = `${USER_PROCEDURES.GETBYCONTROLNUMBER} '${controlNumber}'`;
     const resultNoControl: any = await db.execute(query);
-    console.log(query)
     return resultNoControl.rows.length > 0; //true or false
   } catch (error) {
     throw error;
@@ -59,7 +58,7 @@ export async function findByNoControl(controlNumber: number): Promise<boolean> {
     db.close();
   }
 }
-//Create a new user using Oracle procedure
+
 export async function createUserOracle(user: UserModel): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
@@ -105,7 +104,7 @@ export async function createUserOracle(user: UserModel): Promise<ResultVW> {
     db.close();
   }
 }
-//Get a user by id using Oracle sentence
+
 export async function getUserByControlNumberOracle(
   idUser: number
 ): Promise<ResultVW> {
@@ -148,7 +147,7 @@ export async function getUserByControlNumberOracle(
     }
   }
 }
-//Update a user using Oracle procedure
+
 export async function updateUserOracle(user: UserModel): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
@@ -192,7 +191,7 @@ export async function updateUserOracle(user: UserModel): Promise<ResultVW> {
     db.close();
   }
 }
-//Delete a user using Oracle procedure
+
 export async function deleteUserOracle(idUser: number): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
@@ -216,7 +215,7 @@ export async function deleteUserOracle(idUser: number): Promise<ResultVW> {
     db.close();
   }
 }
-//Working there
+
 export async function loginUserOracle(user: LoginUser): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
 
