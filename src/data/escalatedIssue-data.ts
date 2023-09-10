@@ -28,7 +28,7 @@ export async function getEscalatedIssuesOracle(): Promise<ResultVW> {
         if (EscalatedIssues.length === 0) {
             return new ResultVW(
                 'There are no Escalated Issues to show',
-                StatusCodes.NO_CONTENT,
+                StatusCodes.NOT_FOUND,
                 EscalatedIssues
             );
         }

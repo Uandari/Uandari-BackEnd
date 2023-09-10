@@ -21,7 +21,7 @@ export async function getTypeCategoriesOracle(): Promise<ResultVW> {
         if (TypeCategories.length === 0) {
             return new ResultVW(
                 'There are no categories to show',
-                StatusCodes.NO_CONTENT,
+                StatusCodes.NOT_FOUND,
                 TypeCategories
             );
         }
