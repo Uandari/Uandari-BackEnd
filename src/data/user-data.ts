@@ -11,7 +11,7 @@ import generarJWT from '../helpers/generarJWT';
 export async function getUsersOracle(): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
-    const query = `${USER_PROCEDURES.GET_USERS}`;
+    const query = USER_PROCEDURES.GET_USERS;
     const result = await db.execute(query);
 
     if (!result.rows) {
@@ -49,8 +49,11 @@ export async function getUsersOracle(): Promise<ResultVW> {
 export async function findByNoControl(controlNumber: number): Promise<boolean> {
   const db = await new OracleHelper().createConnection();
   try {
-    const query = `${USER_PROCEDURES.GETBYCONTROLNUMBER} '${controlNumber}'`;
-    const resultNoControl: any = await db.execute(query);
+    const query = {
+      text: USER_PROCEDURES.GETBYCONTROLNUMBER,
+      values: [controlNumber]
+    }
+    const resultNoControl: any = await db.execute(query.text, query.values);
     return resultNoControl.rows.length > 0; //true or false
   } catch (error) {
     throw error;
@@ -72,22 +75,19 @@ export async function createUserOracle(user: UserModel): Promise<ResultVW> {
       imageUrl,
     } = user;
 
-    const plsqlBlock = `
-      BEGIN
-        ADDUSER(
-          '${name}',
-          '${lastNames}',
-          '${controlNumber}',
-          '${mail}',
-          '${password}',
-           ${idRole},
-          '${generarToken()}',
-          '${imageUrl}'
-        );
-      END;
-    `;
-    //console.log(plsqlBlock);
-    const result = await db.execute(plsqlBlock);
+    const query = {
+      text: USER_PROCEDURES.CREATE_USER,
+      values:[
+        name,
+        lastNames,
+        controlNumber,
+        mail,
+        password,
+        idRole,
+        generarToken(),
+        imageUrl,
+      ]}
+    const result = await db.execute(query.text, query.values);
     const userResult: ResultVW = new ResultVW(
       'User created',
       StatusCodes.OK,
@@ -113,8 +113,11 @@ export async function getUserByControlNumberOracle(
     if (!(await findByNoControl(idUser))) {
       return new ResultVW('User not found', StatusCodes.NOT_FOUND, []);
     }
-    const query = `${USER_PROCEDURES.GETBYCONTROLNUMBER}'${idUser}'`;
-    const result: any = await db.execute(query);
+    const query = {
+      text: USER_PROCEDURES.GETBYCONTROLNUMBER,
+      values: [idUser]
+    }
+    const result: any = await db.execute(query.text, query.values);
     const user: UserModel = result.rows.map((row: any) => ({
       idUser: row[0],
       name: row[1],
@@ -166,23 +169,21 @@ export async function updateUserOracle(user: UserModel): Promise<ResultVW> {
       token,
       imageUrl,
     } = user;
-    const query = `
-      BEGIN 
-         ${USER_PROCEDURES.UPDATE_USER}(
-          ${idUser},
-          '${name}',
-          '${lastNames}',
-          '${controlNumber}',
-          '${mail}',
-          '${password}',
-           ${idRole},
-          '${token}',
-          '${imageUrl}'
-        );
-      END;
-    `;
-    console.log(query);
-    await db.execute(query);
+    const query = {
+      text: USER_PROCEDURES.UPDATE_USER,
+      values: [
+        idUser,
+        name,
+        lastNames,
+        controlNumber,
+        mail,
+        password,
+        idRole,
+        token,
+        imageUrl,
+      ]
+    }
+    await db.execute(query.text, query.values);
 
     return new ResultVW('User updated', StatusCodes.OK, user);
   } catch (error) {
@@ -198,14 +199,11 @@ export async function deleteUserOracle(idUser: number): Promise<ResultVW> {
     if (!(await findByNoControl(idUser))) {
       return new ResultVW('User not found', StatusCodes.BAD_REQUEST, []);
     }
-    const query = `
-      BEGIN 
-         ${USER_PROCEDURES.DELETE_USER}(
-          '${idUser}'
-        );
-      END;
-    `;
-    await db.execute(query);
+    const query = {
+      text: USER_PROCEDURES.DELETE_USER,
+      values: [idUser]
+    }
+    await db.execute(query.text, query.values);
     const user = await getUserByControlNumberOracle(idUser);
     console.log(user);
     return new ResultVW('User deleted', StatusCodes.OK, user.vw);
@@ -221,13 +219,12 @@ export async function loginUserOracle(user: LoginUser): Promise<ResultVW> {
 
   try {
     const { controlNumber, password } = user;
-    const query = `
-      SELECT *
-      FROM userVW
-      WHERE controlNumber = '${controlNumber}' AND password_ = '${password}'
-    `;
+    const query = {
+      text: USER_PROCEDURES.LOGIN_USER,
+      values: [controlNumber, password]
+    }
     console.log(query);
-    const result: any = await db.execute(query);
+    const result: any = await db.execute(query.text, query.values);
 
     if (result.rows && result.rows.length > 0) {
       const userRow = result.rows[0];

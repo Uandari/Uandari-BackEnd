@@ -8,7 +8,7 @@ import { StatusCodes } from '../common/enums/enums';
 export async function getCategoriesOracle(): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
-    const query = `${CATEGORY_PROCEDURES.GET_CATEGORIES}`;
+    const query = CATEGORY_PROCEDURES.GET_CATEGORIES
     const result = await db.execute(query);
     if (!result.rows) {
       throw new Error('Query result rows are undefined');
@@ -39,8 +39,11 @@ export async function verifyCategoryExistsOracle(
 ): Promise<Boolean> {
   const db = await new OracleHelper().createConnection();
   try {
-    const query = `${CATEGORY_PROCEDURES.GETBYID} ${idCategory}`;
-    const result: any = await db.execute(query);
+    const query = {
+      text: CATEGORY_PROCEDURES.GETBYID,
+      values: [idCategory]
+    }
+    const result: any = await db.execute(query.text, query.values);
     return result.rows && result.rows.length > 0;
   } catch (error) {
     throw error;
@@ -58,8 +61,11 @@ export async function getCategoryByIdOracle(
     if (!(await verifyCategoryExistsOracle(idCategory))) {
       return new ResultVW('Category Not Found', StatusCodes.NOT_FOUND, []);
     }
-    const query = `${CATEGORY_PROCEDURES.GETBYID} ${idCategory}`;
-    const result: any = await db.execute(query);
+    const query = {
+      text: CATEGORY_PROCEDURES.GETBYID,
+      values: [idCategory]
+    }
+    const result: any = await db.execute(query.text, query.values);
     const category: CategoryModel = result.rows.map((row: any) => ({
       idCategory: row[0],
       name: row[1],
@@ -80,7 +86,7 @@ export async function getStatusIssuesOracle(): Promise<ResultVW> {
     console.log('entro a getStatusIssuesOracle');
     
     const db = await new OracleHelper().createConnection();
-    const query = `${CATEGORY_PROCEDURES.GET_STATUS_ISSUES}`;
+    const query = CATEGORY_PROCEDURES.GET_STATUS_ISSUES;
     const result = await db.execute(query);
     if (!result.rows) {
       throw new Error('Query result rows are undefined');
@@ -109,7 +115,7 @@ export async function getStatusIssuesOracle(): Promise<ResultVW> {
 export async function getIssuesXAvailabilityOracle(): Promise<ResultVW> {
   try {
     const db = await new OracleHelper().createConnection();
-    const query = `${CATEGORY_PROCEDURES.GET_ISSUESXAVAILABILITY}`;
+    const query = CATEGORY_PROCEDURES.GET_ISSUESXAVAILABILITY;
     const result = await db.execute(query);
     if (!result.rows) {
       throw new Error('Query result rows are undefined');
@@ -140,7 +146,7 @@ export async function getIssuesXAvailabilityOracle(): Promise<ResultVW> {
 export async function getIssuesXQualityOracle(): Promise<ResultVW> {
   try {
     const db = await new OracleHelper().createConnection();
-    const query = `${CATEGORY_PROCEDURES.GET_ISSUESXQUALITY}`;
+    const query = CATEGORY_PROCEDURES.GET_ISSUESXQUALITY;
     const result = await db.execute(query);
     if (!result.rows) {
       throw new Error('Query result rows are undefined');
@@ -167,7 +173,7 @@ export async function getIssuesXQualityOracle(): Promise<ResultVW> {
 export async function getIssuesXPerformanceOracle(): Promise<ResultVW> {
   try {
     const db = await new OracleHelper().createConnection();
-    const query = `${CATEGORY_PROCEDURES.GET_ISSUESXPERFORMANCE}`;
+    const query = CATEGORY_PROCEDURES.GET_ISSUESXPERFORMANCE;
     const result = await db.execute(query);
     if (!result.rows) {
       throw new Error('Query result rows are undefined');
@@ -198,7 +204,7 @@ export async function getIssuesXPerformanceOracle(): Promise<ResultVW> {
 export async function getRecentIssuesOracle(): Promise<ResultVW> {
   try {
     const db = await new OracleHelper().createConnection();
-    const query = `${CATEGORY_PROCEDURES.GET_RECENTISSUES}`;
+    const query = CATEGORY_PROCEDURES.GET_RECENTISSUES;
     const result = await db.execute(query);
     if (!result.rows) {
       throw new Error('Query result rows are undefined');
