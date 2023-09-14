@@ -82,3 +82,14 @@ export enum CELL_PROCEDURES {
   //1: idCell
   DELETE_CELL = 'BEGIN DELETECELL(:1);END;'
 }
+export enum LINE_PROCEDURES {
+  GET_LINES = 'SELECT * FROM LINE WHERE isDelete = 0',
+  //1: lineName
+  INSERT_LINE = 'BEGIN ADDLINE(:1); END;',
+  //1: idLine, 2: lineName
+  UPDATE_LINE = 'BEGIN UPDATELINE(:1,:2); END;',
+  //1: idLine
+  DELETE_LINE = 'BEGIN DELETELINE(:1); END;',
+  //1: idLine
+  GETBYID = 'SELECT * FROM LINE WHERE idLine = :1 ',
+}
