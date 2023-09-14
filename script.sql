@@ -997,3 +997,22 @@ EXCEPTION
         ROLLBACK;
         RAISE;
 END UPDATE_OBJECTIVES_INDICATOR;
+
+/*
+    View User
+*/
+
+CREATE VIEW USERSFM AS
+SELECT
+    uv.idUser,
+    uv.name_,
+    uv.lastNames,
+    uv.controlNumber,
+    uv.imageUrl,
+    uv.password_,
+    r.name AS rol,
+    uv.token AS access_token
+FROM UserVW uv
+INNER JOIN Role r ON uv.idRole = r.idRole;
+
+SELECT * FROM USERSFM ;
