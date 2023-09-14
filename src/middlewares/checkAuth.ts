@@ -24,6 +24,7 @@ const checkAuth = async (req: CustomRequest, res: Response, next: NextFunction) 
       req.usuario = user;
       return next();
     } catch (error) {
+      console.log(error);
       return res.status(404).json({ msg: "Hubo un error" });
     }
   }

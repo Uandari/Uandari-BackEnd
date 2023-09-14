@@ -7,9 +7,9 @@ export enum USER_PROCEDURES {
   //1: idUser
   DELETE_USER = 'BEGIN DELETEUSER(:1); END;',
   //1: controlNumber 2: password
-  LOGIN_USER = 'BEGIN LOGINUSER(:1,:2); END;',
-  //1: idUser
-  GETBYCONTROLNUMBER = 'SELECT * FROM USERVW WHERE idUser = :1 ',
+  LOGIN_USER = "SELECT * FROM USERSFM WHERE controlNumber = :1 AND password_ = :2",
+  //1: controlNumber
+  GETBYCONTROLNUMBER = 'SELECT * FROM USERSFM WHERE controlNumber = :1'
 }
 export enum ROLE_PROCEDURES {
   GET_ROLES = 'SELECT * FROM  ROLE WHERE isDelete = 0',
@@ -34,20 +34,20 @@ export enum HOURXHOUR_PROCEDURES {
 }
 export enum ISSUE_PROCEDURES {
   GET_ISSUES = 'SELECT * FROM ISSUEVW WHERE isDelete = 0',
-  //1: idHourXHour, 2: idCategory, 3: idType, 4: enginesAffected, 5: description_, 6: date_, 7: estimateDate, 8: status, 9: shift, 10: isDelete, 11: idUser
-  INSERT_ISSUE = 'BEGIN ADDISSUE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11); END;',
+  //1: idHourXHour, 2: idCategory, 3: idType, 4: enginesAffected, 5: description_, 6: date_, 7: estimateDate, 8: status, 9: shift, 10: idUser
+  INSERT_ISSUE = 'BEGIN ADDISSUE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10); END;',
   //1: idIssue, 2: idHourXHour, 3: idCategory, 4: idType, 5: enginesAffected, 6: description_, 7: date_, 8: estimateDate, 9: status, 10: shift, 11: idUser
   UPDATE_ISSUE = 'BEGIN UPDATEISSUE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11); END;',
   //1: idIssue
   DELETE_ISSUE = 'BEGIN DELETEISSUE(:1); END;',
   //1: idIssue
   GETBYID = 'SELECT * FROM ISSUE WHERE idIssue = :1',
-  LISTOFISSUES = 'SELECT * FROM LISTOFISSUES WHERE isDelete = 0',
+  LISTOFISSUES = 'SELECT * FROM LISTOFISSUES',
   //1: idIssue
   GETISSUESBYHOURS = 'SELECT * FROM issueXHourxHour WHERE idHourXHour = :1',
 }
 export enum CATEGORY_PROCEDURES {
-  GET_CATEGORIES = 'SELECT * FROM CATEGORY WHERE isDelete = 0',
+  GET_CATEGORIES = 'SELECT * FROM CATEGORY ',
   // Confirmar si se les añadirá el campo isDelete
   GET_RECENTISSUES = 'SELECT * FROM RECENT_ISSUES',
   GET_ISSUESXAVAILABILITY = 'SELECT * FROM IssuesXAvailability',
@@ -58,12 +58,12 @@ export enum CATEGORY_PROCEDURES {
   GETBYID = 'SELECT * FROM CATEGORY WHERE idCategory = :1',
 }
 export enum TYPECATEGORY_PROCEDURES {
-  GET_TYPECATEGORIES = 'SELECT * FROM TYPES_CATEGORY WHERE isDelete = 0',
+  GET_TYPECATEGORIES = 'SELECT * FROM TYPES_CATEGORY',
   //1: idTypesCategory
   GETBYID = 'SELECT * FROM TYPES_CATEGORY WHERE idTypesCategory = :1',
 }
 export enum ESCALATEDISSUES_PROCEDURES {
-  GET_ESCALATEDISSUES = 'SELECT * FROM ESCALATEDISSUES WHERE isDelete = 0',
+  GET_ESCALATEDISSUES = 'SELECT * FROM ESCALATEDISSUES',
   //1: dateScaling, 2: scaleDeviation, 3: impeller, 4: agreedAction, 5: idUser, 6: status, 7: deadline, 8: idIssue
   INSERT_ESCALATEDISSUE = 'BEGIN ADDESCALATEDISSUE(:1,:2,:3,:4,:5,:6,:7,:8); END;',
   //1: idIssueScaled, 2: dateScaling, 3: scaleDeviation, 4: impeller, 5: affect5s, 6: agreedAction, 7: idUser, 8: status, 9: deadline, 10: idIssue

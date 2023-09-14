@@ -19,7 +19,6 @@ export async function insertIssueOracle(issue: IssueModel): Promise<ResultVW> {
       estimateDate,
       status,
       shift,
-      isDelete,
       idUser,
     } = issue;
     const query = {
@@ -34,11 +33,10 @@ export async function insertIssueOracle(issue: IssueModel): Promise<ResultVW> {
         estimateDate,
         status,
         shift,
-        isDelete,
         idUser,
       ],
     }
-    console.log(isDelete);
+
     console.log(query);
     await db.execute(query.text, query.values);
     const issueResult: ResultVW = new ResultVW(
