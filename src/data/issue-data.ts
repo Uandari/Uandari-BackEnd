@@ -19,26 +19,26 @@ export async function insertIssueOracle(issue: IssueModel): Promise<ResultVW> {
       estimateDate,
       status,
       shift,
-      isDelete,
       idUser,
     } = issue;
-    const query = `BEGIN
-    ${ISSUE_PROCEDURES.INSERT_ISSUE}(
-        ${idHourXHour},
-        ${idCategory},
-        ${idType},
-        ${enginesAffected},
-        '${description_}',
-        '${date_}',
-        '${estimateDate}',
-        '${status}',
-        '${shift}',
-        ${idUser}
-    );
-    END;`;
-    console.log(isDelete);
+    const query = {
+      text: ISSUE_PROCEDURES.INSERT_ISSUE,
+      values: [
+        idHourXHour,
+        idCategory,
+        idType,
+        enginesAffected,
+        description_,
+        date_,
+        estimateDate,
+        status,
+        shift,
+        idUser,
+      ],
+    }
+
     console.log(query);
-    await db.execute(query);
+    await db.execute(query.text, query.values);
     const issueResult: ResultVW = new ResultVW(
       'Issue created',
       StatusCodes.OK,
@@ -53,8 +53,11 @@ export async function insertIssueOracle(issue: IssueModel): Promise<ResultVW> {
 export async function verifyIssueOracle(idIssue: number): Promise<boolean> {
   try {
     const db = await new OracleHelper().createConnection();
-    const query = `${ISSUE_PROCEDURES.GETBYID}${idIssue}`;
-    const result: any = await db.execute(query);
+    const query = {
+      text: ISSUE_PROCEDURES.GETBYID,
+      values: [idIssue],
+    }
+    const result: any = await db.execute(query.text, query.values);
     return result.rows && result.rows.length > 0;
   } catch (error) {
     throw error;
@@ -69,8 +72,11 @@ export async function getIssueByIdOracle(idIssue: number): Promise<ResultVW> {
       return new ResultVW('Issue not found', StatusCodes.NOT_FOUND, []);
     }
 
-    const query = `${ISSUE_PROCEDURES.GETBYID}(${idIssue})`;
-    const result: any = await db.execute(query);
+    const query = {
+      text: ISSUE_PROCEDURES.GETBYID,
+      values: [idIssue],
+    }
+    const result: any = await db.execute(query.text, query.values);
     const issue: IssueModel = result.rows.map((row: any) => ({
       idIssue: row[0],
       idHourXHour: row[1],
@@ -112,23 +118,24 @@ export async function updateIssueOracle(issue: IssueModel): Promise<ResultVW> {
       shift,
       idUser,
     } = issue;
-    const query = `BEGIN
-    ${ISSUE_PROCEDURES.UPDATE_ISSUE}(
-        ${idIssue},
-        ${idHourXHour},
-        ${idCategory},
-        ${idType},
-        ${enginesAffected},
-        '${description_}',
-        '${date_}',
-        '${estimateDate}',
-        '${status}',
-        '${shift}',
-        ${idUser}
-        );
-        END;`;
+    const query = {
+      text: ISSUE_PROCEDURES.UPDATE_ISSUE,
+      values: [
+        idIssue,
+        idHourXHour,
+        idCategory,
+        idType,
+        enginesAffected,
+        description_,
+        date_,
+        estimateDate,
+        status,
+        shift,
+        idUser,
+      ],
+    }
 
-    await db.execute(query);
+    await db.execute(query.text, query.values);
     let issueResult: ResultVW;
     if (typeof idIssue === 'number') {
       issueResult = await getIssueByIdOracle(idIssue);
@@ -150,11 +157,12 @@ export async function deleteIssueOracle(idIssue: number): Promise<ResultVW> {
     if (!(await verifyIssueOracle(idIssue))) {
       return new ResultVW('Issue not found', StatusCodes.NOT_FOUND, []);
     }
-    const query = `BEGIN
-    ${ISSUE_PROCEDURES.DELETE_ISSUE}(${idIssue});
-    END;`;
+    const query = {
+      text: ISSUE_PROCEDURES.DELETE_ISSUE,
+      values: [idIssue],
+    }
     console.log(query);
-    await db.execute(query);
+    await db.execute(query.text, query.values);
     const issue = await getIssueByIdOracle(idIssue);
     return new ResultVW('Issue deleted', StatusCodes.OK, issue.vw);
   } catch (error) {
@@ -167,7 +175,7 @@ export async function deleteIssueOracle(idIssue: number): Promise<ResultVW> {
 export async function listOfIssuesOracle(): Promise<ResultVW> {
   try {
     const db = await new OracleHelper().createConnection();
-    const query = `${ISSUE_PROCEDURES.LISTOFISSUES}`;
+    const query = ISSUE_PROCEDURES.LISTOFISSUES
     const result: any = await db.execute(query);
     const groupedIssues: any = {};
 
@@ -241,8 +249,11 @@ export async function listOfIssuesOracle(): Promise<ResultVW> {
 export async function verifyIssueHourXHourOracle(idIssue: number): Promise<boolean> {
   try {
     const db = await new OracleHelper().createConnection();
-    const query = `${ISSUE_PROCEDURES.GETISSUESBYHOURS}${idIssue}`;
-    const result: any = await db.execute(query);
+    const query = {
+      text: ISSUE_PROCEDURES.GETISSUESBYHOURS,
+      values: [idIssue],
+    }
+    const result: any = await db.execute(query.text, query.values);
     return result.rows && result.rows.length > 0;
   } catch (error) {
     throw error;
@@ -255,8 +266,11 @@ export async function issueXIdHourxHour(idIssue: number): Promise<ResultVW> {
     if (!(await verifyIssueHourXHourOracle(idIssue))) {
       return new ResultVW('No issue at this time', StatusCodes.BAD_REQUEST, []);
     }
-    const query = `${ISSUE_PROCEDURES.GETISSUESBYHOURS}(${idIssue})`;
-    const result: any = await db.execute(query);
+    const query = {
+      text: ISSUE_PROCEDURES.GETISSUESBYHOURS,
+      values: [idIssue],
+    }
+    const result: any = await db.execute(query.text, query.values);
     const issue: IssueModel = result.rows.map((row: any) => ({
       idIssue: row[0],
       idHourXHour: row[1],

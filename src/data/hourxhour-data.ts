@@ -17,7 +17,7 @@ export async function insertMustAndGetIDOracle(
       p_must: must,
       p_id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
     };
-    const query = `${HOURXHOUR_PROCEDURES.INSERT_MUST_AND_GET_ID}`;
+    const query = HOURXHOUR_PROCEDURES.INSERT_MUST_AND_GET_ID
     const idHourXHour: any = await db.execute(query, bindVars);
     const mustResult: MustAndGetID = new MustAndGetID(
       must,
@@ -42,8 +42,11 @@ export async function getHourXHourByIdOracle(
     if (!(await verifyHourXHourOracle(idHoraxHora))) {
       return new ResultVW('Hour not found', StatusCodes.NOT_FOUND, []);
     }
-    const query = `${HOURXHOUR_PROCEDURES.GETBYID}(${idHoraxHora})`;
-    const result: any = await db.execute(query);
+    const query = {
+      text: HOURXHOUR_PROCEDURES.GETBYID,
+      values: [idHoraxHora]
+    }
+    const result: any = await db.execute(query.text, query.values);
     const hourResult: HourXHourModel = result.rows.map((row: any) => ({
       idHourxHour: row[0],
       hour: row[1],
@@ -73,8 +76,11 @@ export async function verifyHourXHourOracle(
 ): Promise<boolean> {
   const db = await new OracleHelper().createConnection();
   try {
-    const query = `${HOURXHOUR_PROCEDURES.GETBYID}(${idHourXHour})`;
-    const result: any = await db.execute(query);
+    const query = {
+      text: HOURXHOUR_PROCEDURES.GETBYID,
+      values: [idHourXHour]
+    }
+    const result: any = await db.execute(query.text, query.values);
     return result.rows && result.rows.length > 0;
   } catch (error) {
     throw error;
@@ -100,22 +106,23 @@ export async function updateHourXHourOracle(
       idUser,
     } = hourXhour;
 
-    const query = `BEGIN
-    ${HOURXHOUR_PROCEDURES.UPDATE_HOURXHOUR}(
-     ${idHourxHour},
-     '${hour}',
-     '${date}',
-      ${must},
-      ${mustAccumulative},
-      ${is},
-      ${isAccumulative},
-      ${difference},
-      ${accumulativeDifference},
-      ${idCell},
-      ${idUser}
-    );
-    END;`;
-    await db.execute(query);
+    const query = {
+      text: HOURXHOUR_PROCEDURES.UPDATE_HOURXHOUR,
+      values: [
+        idHourxHour,
+        hour,
+        date,
+        must,
+        mustAccumulative,
+        is,
+        isAccumulative,
+        difference,
+        accumulativeDifference,
+        idCell,
+        idUser
+      ]
+    }
+    await db.execute(query.text, query.values);
     let hourXhourResult: ResultVW;
 
     if (typeof idHourxHour === 'number') {
@@ -138,7 +145,7 @@ export async function updateHourXHourOracle(
 export async function getAllHourXHourOracle(): Promise<ResultVW> {
   try {
     const db = await new OracleHelper().createConnection();
-    const query = `${HOURXHOUR_PROCEDURES.GET_HOURXHOUR}`;
+    const query = HOURXHOUR_PROCEDURES.GET_HOURXHOUR
     const result = await db.execute(query);
 
     if (!result.rows) {
@@ -188,7 +195,7 @@ export async function getAllHourXHourOracle(): Promise<ResultVW> {
 export async function getHourXHour(): Promise<ResultVW> {
   try {
     const db = await new OracleHelper().createConnection();
-    const query = `${HOURXHOUR_PROCEDURES.GET_HOURXHOUR_WITHOUT_ISSUES}`;
+    const query = HOURXHOUR_PROCEDURES.GET_HOURXHOUR_WITHOUT_ISSUES
     const result = await db.execute(query);
     if (!result.rows) {
       return new ResultVW('HourXHour not found', StatusCodes.NOT_FOUND, []);

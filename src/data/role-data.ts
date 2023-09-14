@@ -8,7 +8,7 @@ import { StatusCodes } from '../common/enums/enums';
 export async function getRolesOracle(): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
-    const query = `${ROLE_PROCEDURES.GET_ROLES}`;
+    const query = ROLE_PROCEDURES.GET_ROLES
     const result = await db.execute(query);
     if (!result.rows) {
       throw new Error('Query result rows are undefined');
@@ -37,14 +37,11 @@ export async function createRoleOracle(role: RoleModel): Promise<ResultVW> {
 
   try {
     const { name } = role;
-    const query = `
-      BEGIN 
-          ${ROLE_PROCEDURES.CREATE_ROLE}(
-          '${name}'
-        );
-      END;
-    `;
-    const result = await db.execute(query);
+    const query = {
+      text: ROLE_PROCEDURES.CREATE_ROLE,
+      values: [name]
+    }
+    const result = await db.execute(query.text, query.values);
     const roleResult: ResultVW = new ResultVW(
       'Rol created',
       StatusCodes.OK,
@@ -68,8 +65,11 @@ export async function getRoleByIdOracle(idRole: number): Promise<ResultVW> {
       //console.log(await verifyRolExistsOracle(idRole));
       return new ResultVW('Role not found', StatusCodes.NOT_FOUND, []);
     }
-    const query = `${ROLE_PROCEDURES.GETBYID} ${idRole}`;
-    const result: any = await db.execute(query);
+    const query = {
+      text: ROLE_PROCEDURES.GETBYID,
+      values: [idRole]
+    }
+    const result: any = await db.execute(query.text, query.values);
     const role: RoleModel = result.rows.map((row: any) => ({
       idRole: row[0],
       name: row[1],
@@ -86,8 +86,11 @@ export async function getRoleByIdOracle(idRole: number): Promise<ResultVW> {
 export async function verifyRoleExistsOracle(idRole: number): Promise<boolean> {
   const db = await new OracleHelper().createConnection();
   try {
-    const query = `${ROLE_PROCEDURES.GETBYID} ${idRole}`;
-    const result: any = await db.execute(query);
+    const query = {
+      text: ROLE_PROCEDURES.GETBYID,
+      values: [idRole]
+    }
+    const result: any = await db.execute(query.text, query.values);
     return result.rows && result.rows.length > 0;
   } catch (error) {
     throw error;
@@ -104,15 +107,12 @@ export async function deleteRoleByIdOracle(idRole: number): Promise<ResultVW> {
       console.log(await verifyRoleExistsOracle(idRole));
       return new ResultVW('Role not found', StatusCodes.NOT_FOUND, []);
     }
-    const query = `
-      BEGIN 
-          ${ROLE_PROCEDURES.DELETE_ROLE}(
-          ${idRole}
-        );
-      END;
-    `;
+    const query = {
+      text: ROLE_PROCEDURES.DELETE_ROLE,
+      values: [idRole]
+    }
     console.log(query)
-    await db.execute(query);
+    await db.execute(query.text, query.values);
     const role = await getRoleByIdOracle(idRole);
     const roleResult: ResultVW = new ResultVW(
       'Role deleted',
@@ -130,16 +130,12 @@ export async function updateRoleOracle(role: RoleModel): Promise<ResultVW> {
   try {
     const { idRole, name } = role;
 
-    const query = `
-      BEGIN 
-          ${ROLE_PROCEDURES.UPDATE_ROLE}(
-          ${idRole},
-          '${name}'
-        );
-      END;
-    `;
+    const query = {
+      text: ROLE_PROCEDURES.UPDATE_ROLE,
+      values: [idRole, name]
+    }
     console.log(query);
-    await db.execute(query);
+    await db.execute(query.text, query.values);
     let roleResult: ResultVW;
     if (typeof idRole === 'number') {
       roleResult = await getRoleByIdOracle(idRole);

@@ -8,7 +8,7 @@ import { StatusCodes } from '../common/enums/enums';
 export async function getEscalatedIssuesOracle(): Promise<ResultVW> {
     const db = await new OracleHelper().createConnection();
     try {
-        const query = `${ESCALATEDISSUES_PROCEDURES.GET_ESCALATEDISSUES}`;
+        const query = ESCALATEDISSUES_PROCEDURES.GET_ESCALATEDISSUES;
         const result = await db.execute(query);
         if (!result.rows) {
             throw new Error('Query result rows are undefined')
@@ -54,20 +54,21 @@ export async function insertEscalatedIssueOracle(escalatedIssue: EscalatedIssues
             deadline,
             idIssue,
         } = escalatedIssue;
-        const query = `BEGIN
-        ${ESCALATEDISSUES_PROCEDURES.INSERT_ESCALATEDISSUE}(
-            '${dateScaling}',
-            ${scaleDeviation},
-            '${impeller}',
-            '${agreedAction}',
-            ${idUser},
-            ${status},
-            '${deadline}',
-            ${idIssue}
-        );
-        END;`;
+        const query = {
+            text: ESCALATEDISSUES_PROCEDURES.INSERT_ESCALATEDISSUE,
+            values: [
+                dateScaling,
+                scaleDeviation,
+                impeller,
+                agreedAction,
+                idUser,
+                status,
+                deadline,
+                idIssue
+            ]
+        }
         console.log(query);
-        await db.execute(query);
+        await db.execute(query.text, query.values);
         const escalatedIssueResult: ResultVW = new ResultVW(
             'Escalated Issue added',
             StatusCodes.OK,
@@ -85,8 +86,11 @@ export async function insertEscalatedIssueOracle(escalatedIssue: EscalatedIssues
 export async function verifyIssueScaled(idIssueScaled: number): Promise<boolean> {
     const db = await new OracleHelper().createConnection();
     try {
-        const query = `${ESCALATEDISSUES_PROCEDURES.GETBYID}(${idIssueScaled})`;
-        const result: any = await db.execute(query);
+        const query = {
+            text: ESCALATEDISSUES_PROCEDURES.GETBYID,
+            values: [idIssueScaled]
+        };
+        const result: any = await db.execute(query.text, query.values);
         return result.rows && result.rows.length > 0;
     } catch (error) {
         throw error;
@@ -100,8 +104,11 @@ export async function getEscalatedIssueByIdOracle(idIssueScaled: number): Promis
         if (!await verifyIssueScaled(idIssueScaled)) {
             return new ResultVW('Escalated Issue not found', StatusCodes.NOT_FOUND, []);
         }
-        const query = `${ESCALATEDISSUES_PROCEDURES.GETBYID}(${idIssueScaled})`;
-        const result: any = await db.execute(query);
+        const query = {
+            text: ESCALATEDISSUES_PROCEDURES.GETBYID,
+            values: [idIssueScaled]
+        };
+        const result: any = await db.execute(query.text, query.values);
         const escalatedIssue: EscalatedIssuesModel[] = result.rows.map((row: any) => ({
             idIssueScaled: row[0],
             dateScaling: row[1],
@@ -141,21 +148,22 @@ export async function updateEscalatedIssueOracle(escalatedIssue: EscalatedIssues
             deadline,
             idIssue,
         } = escalatedIssue;
-        const query = `BEGIN
-        ${ESCALATEDISSUES_PROCEDURES.UPDATE_ESCALATEDISSUE}(
-            ${idIssueScaled},
-            '${dateScaling}',
-            ${scaleDeviation},
-            '${impeller}',
-            ${affect5s},
-            '${agreedAction}',
-            ${idUser},
-            ${status},
-            '${deadline}',
-            ${idIssue}
-        );
-        END;`;
-        await db.execute(query);
+        const query = {
+            text: ESCALATEDISSUES_PROCEDURES.UPDATE_ESCALATEDISSUE,
+            values: [
+                idIssueScaled,
+                dateScaling,
+                scaleDeviation,
+                impeller,
+                affect5s,
+                agreedAction,
+                idUser,
+                status,
+                deadline,
+                idIssue
+            ]
+        }
+        await db.execute(query.text, query.values);
         let escalatedIssueResult: ResultVW;
 
         if (typeof idIssueScaled === 'number'){

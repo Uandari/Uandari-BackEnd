@@ -1,34 +1,28 @@
-import { LoginUser } from '../common/api-interfaces/loginUser';
+import { loginUserRequest } from '../common/api-interfaces/user/loginUserRequest';
+import { userResponse } from 'src/common/api-interfaces/user/userResponse';
 import { ResultVW } from '../common/api-interfaces/result';
 import { UserModel } from '../common/entities/UserModel';
 import { USER_PROCEDURES } from '../common/enums/stored-procedures';
 import { StatusCodes } from '../common/enums/enums';
 import { OracleHelper } from '../handlers/OracleHelper';
 import { generarToken } from '../helpers/TokenHelpers';
-import generarJWT from '../helpers/generarJWT';
-
 
 export async function getUsersOracle(): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
-    const query = `${USER_PROCEDURES.GET_USERS}`;
+    const query = USER_PROCEDURES.GET_USERS;
     const result = await db.execute(query);
 
     if (!result.rows) {
       throw new Error('Query result rows are undefined');
     }
-    const users: UserModel[] = result.rows.map((row: any) => ({
+    
+    const users: userResponse[] = result.rows.map((row: any) => ({
       idUser: row[0],
       name: row[1],
       lastNames: row[2],
       controlNumber: row[3],
-      mail: row[4],
-      password: row[5],
-      idRole: row[6],
-      token: row[7],
-      verifiedAccount: row[8],
-      imageUrl: row[9],
-      isDelete: row[10],
+      role: row[4],
     }));
 
     if (users.length === 0) {
@@ -49,8 +43,11 @@ export async function getUsersOracle(): Promise<ResultVW> {
 export async function findByNoControl(controlNumber: number): Promise<boolean> {
   const db = await new OracleHelper().createConnection();
   try {
-    const query = `${USER_PROCEDURES.GETBYCONTROLNUMBER} '${controlNumber}'`;
-    const resultNoControl: any = await db.execute(query);
+    const query = {
+      text: USER_PROCEDURES.GETBYCONTROLNUMBER,
+      values: [controlNumber]
+    }
+    const resultNoControl: any = await db.execute(query.text, query.values);
     return resultNoControl.rows.length > 0; //true or false
   } catch (error) {
     throw error;
@@ -72,22 +69,20 @@ export async function createUserOracle(user: UserModel): Promise<ResultVW> {
       imageUrl,
     } = user;
 
-    const plsqlBlock = `
-      BEGIN
-        ADDUSER(
-          '${name}',
-          '${lastNames}',
-          '${controlNumber}',
-          '${mail}',
-          '${password}',
-           ${idRole},
-          '${generarToken()}',
-          '${imageUrl}'
-        );
-      END;
-    `;
-    //console.log(plsqlBlock);
-    const result = await db.execute(plsqlBlock);
+    const query = {
+      text: USER_PROCEDURES.CREATE_USER,
+      values: [
+        name,
+        lastNames,
+        controlNumber,
+        mail,
+        password,
+        idRole,
+        generarToken(),
+        imageUrl,
+      ]
+    }
+    const result = await db.execute(query.text, query.values);
     const userResult: ResultVW = new ResultVW(
       'User created',
       StatusCodes.OK,
@@ -113,20 +108,18 @@ export async function getUserByControlNumberOracle(
     if (!(await findByNoControl(idUser))) {
       return new ResultVW('User not found', StatusCodes.NOT_FOUND, []);
     }
-    const query = `${USER_PROCEDURES.GETBYCONTROLNUMBER}'${idUser}'`;
-    const result: any = await db.execute(query);
-    const user: UserModel = result.rows.map((row: any) => ({
+    const query = {
+      text: USER_PROCEDURES.GETBYCONTROLNUMBER,
+      values: [idUser]
+    }
+    const result: any = await db.execute(query.text, query.values);
+    const user: userResponse = result.rows.map((row: any) => ({
       idUser: row[0],
       name: row[1],
       lastNames: row[2],
       controlNumber: row[3],
-      mail: row[4],
-      password: row[5],
-      idRole: row[6],
-      token: row[7],
-      verifiedAccount: row[8],
-      imageUrl: row[9],
-      isDelete: row[10],
+      imageUrl: row[4],
+      role: row[6],
     }));
 
     const userResult: ResultVW = new ResultVW(
@@ -166,23 +159,21 @@ export async function updateUserOracle(user: UserModel): Promise<ResultVW> {
       token,
       imageUrl,
     } = user;
-    const query = `
-      BEGIN 
-         ${USER_PROCEDURES.UPDATE_USER}(
-          ${idUser},
-          '${name}',
-          '${lastNames}',
-          '${controlNumber}',
-          '${mail}',
-          '${password}',
-           ${idRole},
-          '${token}',
-          '${imageUrl}'
-        );
-      END;
-    `;
-    console.log(query);
-    await db.execute(query);
+    const query = {
+      text: USER_PROCEDURES.UPDATE_USER,
+      values: [
+        idUser,
+        name,
+        lastNames,
+        controlNumber,
+        mail,
+        password,
+        idRole,
+        token,
+        imageUrl,
+      ]
+    }
+    await db.execute(query.text, query.values);
 
     return new ResultVW('User updated', StatusCodes.OK, user);
   } catch (error) {
@@ -198,14 +189,11 @@ export async function deleteUserOracle(idUser: number): Promise<ResultVW> {
     if (!(await findByNoControl(idUser))) {
       return new ResultVW('User not found', StatusCodes.BAD_REQUEST, []);
     }
-    const query = `
-      BEGIN 
-         ${USER_PROCEDURES.DELETE_USER}(
-          '${idUser}'
-        );
-      END;
-    `;
-    await db.execute(query);
+    const query = {
+      text: USER_PROCEDURES.DELETE_USER,
+      values: [idUser]
+    }
+    await db.execute(query.text, query.values);
     const user = await getUserByControlNumberOracle(idUser);
     console.log(user);
     return new ResultVW('User deleted', StatusCodes.OK, user.vw);
@@ -216,37 +204,25 @@ export async function deleteUserOracle(idUser: number): Promise<ResultVW> {
   }
 }
 
-export async function loginUserOracle(user: LoginUser): Promise<ResultVW> {
+export async function loginUserOracle(user: loginUserRequest): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
-
   try {
     const { controlNumber, password } = user;
-    const query = `
-      SELECT *
-      FROM userVW
-      WHERE controlNumber = '${controlNumber}' AND password_ = '${password}'
-    `;
-    console.log(query);
-    const result: any = await db.execute(query);
-
+    const query = USER_PROCEDURES.LOGIN_USER;
+    const result: any = await db.execute(query, [controlNumber, password]);
     if (result.rows && result.rows.length > 0) {
       const userRow = result.rows[0];
-      const user: UserModel = {
+      const user: userResponse = {
         idUser: userRow[0],
         name: userRow[1],
         lastNames: userRow[2],
         controlNumber: userRow[3],
-        mail: userRow[4],
-        password: userRow[5],
-        idRole: userRow[6],
-        token: generarJWT(userRow[3]),
-        isDeleted: userRow[10],
+        role: userRow[4],
+        accessToken: userRow[7],
       };
-      console.log(user);
       return new ResultVW('User found', StatusCodes.OK, user);
     } else {
-      console.log('User not found');
-      return new ResultVW('User not found', StatusCodes.BAD_REQUEST, user);
+      throw new Error('User not found');
     }
   } catch (error) {
     throw error;
@@ -254,5 +230,6 @@ export async function loginUserOracle(user: LoginUser): Promise<ResultVW> {
     db.release();
   }
 }
+
 
 

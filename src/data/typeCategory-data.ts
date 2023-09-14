@@ -8,7 +8,7 @@ import { StatusCodes } from '../common/enums/enums';
 export async function getTypeCategoriesOracle(): Promise<ResultVW> {
     const db = await new OracleHelper().createConnection();
     try {
-        const query = `${TYPECATEGORY_PROCEDURES.GET_TYPECATEGORIES}`;
+        const query = TYPECATEGORY_PROCEDURES.GET_TYPECATEGORIES;
         const result = await db.execute(query);
         if (!result.rows) {
             throw new Error('Query result rows are undefined')
@@ -37,8 +37,11 @@ export async function getTypeCategoriesOracle(): Promise<ResultVW> {
 export async function verifyTypeCategoryExistsOracle(idTypeCategory: number): Promise<Boolean> {
     const db = await new OracleHelper().createConnection();
     try {
-        const query = `${TYPECATEGORY_PROCEDURES.GETBYID} ${idTypeCategory}`;
-        const result: any = await db.execute(query);
+        const query = {
+            text: TYPECATEGORY_PROCEDURES.GETBYID,
+            values: [idTypeCategory]
+        };
+        const result: any = await db.execute(query.text, query.values);
         return result.rows && result.rows.length > 0;
     } catch (error) {
         throw error;
@@ -54,8 +57,11 @@ export async function getTypeCategoryByIdOracle(idTypeCategory: number): Promise
         if (!(await verifyTypeCategoryExistsOracle(idTypeCategory))) {
             return new ResultVW('TypeCategory not found', StatusCodes.NOT_FOUND, []);
         }
-        const query = `${TYPECATEGORY_PROCEDURES.GETBYID} ${idTypeCategory}`;
-        const result: any = await db.execute(query);
+        const query = {
+            text: TYPECATEGORY_PROCEDURES.GETBYID,
+            values: [idTypeCategory]
+        };
+        const result: any = await db.execute(query.text, query.values);
         const typeCategory: TypeCategoryModel = result.rows.map((row: any) => ({
             idTypeCategory: row[0],
             categoryType: row[1],

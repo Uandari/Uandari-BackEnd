@@ -93,27 +93,27 @@ const updateUser = async (req: Request, res: Response) => {
   }
 };
 //login user
-const loginUser = async (req: any, res: any) => {
+const loginUser = async (req: Request, res: Response) => {
   try {
     const LoginUser = {
       controlNumber: req.body.controlNumber,
       password: req.body.password,
     };
     const result = await loginUserOracle(LoginUser);
-
     res.status(result.statusCode).json({
       status: result.statusCode,
       message: result.message,
       payload: result.vw,
     });
   } catch (error) {
-    res.status(StatusCodes.SERVER_ERROR).json({
+    res.status(StatusCodes.BAD_REQUEST).json({
       status: StatusCodes.SERVER_ERROR,
       message: error,
       payload: [],
     });
   }
 };
+
 //Delete a user
 const deleteUser = async (req: Request, res: Response) => {
   try {
