@@ -1114,3 +1114,35 @@ SELECT
     uv.token AS access_token
 FROM UserVW uv
 INNER JOIN Role r ON uv.idRole = r.idRole;
+
+create or replace PROCEDURE DELETEUSER(
+    p_controlNumber IN NUMBER
+) AS
+BEGIN
+    UPDATE UserVW
+    SET
+        isDelete = 1
+    WHERE controlnumber = p_controlNumber;
+
+    COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END DELETEUSER;
+
+DROP VIEW USERSFM
+
+CREATE VIEW USERSFM AS
+SELECT
+    uv.idUser,
+    uv.name_,
+    uv.lastNames,
+    uv.controlNumber,
+    uv.imageUrl,
+    uv.password_,
+    uv.isdelete,
+    r.name AS rol,
+    uv.token AS access_token
+FROM UserVW uv
+INNER JOIN Role r ON uv.idRole = r.idRole;
