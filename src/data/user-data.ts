@@ -16,13 +16,14 @@ export async function getUsersOracle(): Promise<ResultVW> {
     if (!result.rows) {
       throw new Error('Query result rows are undefined');
     }
-    
+
     const users: userResponse[] = result.rows.map((row: any) => ({
       idUser: row[0],
       name: row[1],
       lastNames: row[2],
+      imageUrl: row[4],
       controlNumber: row[3],
-      role: row[4],
+      role: row[6],
     }));
 
     if (users.length === 0) {
@@ -217,7 +218,8 @@ export async function loginUserOracle(user: loginUserRequest): Promise<ResultVW>
         name: userRow[1],
         lastNames: userRow[2],
         controlNumber: userRow[3],
-        role: userRow[4],
+        imageUrl: userRow[4],
+        role: userRow[6],
         accessToken: userRow[7],
       };
       return new ResultVW('User found', StatusCodes.OK, user);
