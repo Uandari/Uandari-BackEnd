@@ -1,5 +1,5 @@
-import { StatusCodes } from "src/common/enums/enums";
-import { Response , Request } from "express";
+import { StatusCodes } from "../common/enums/enums";
+import { Response, Request } from "express";
 import { getLinesOracle, insertLineOracle, updateLineOracle, getLineByIdOracle, deleteLineOracle } from "../data/line-data";
 
 //Get All Lines
@@ -85,7 +85,7 @@ const getLineById = async (req: Request, res: Response) => {
 //Delete Line
 const deleteLine = async (req: Request, res: Response) => {
     try {
-        const idLine = parseInt(req.params.idLine);
+        const idLine = parseInt(req.body.idLine);
         const lines = await deleteLineOracle(idLine);
         res.status(lines.statusCode).json({
             status: lines.statusCode,

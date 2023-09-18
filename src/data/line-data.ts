@@ -1,8 +1,9 @@
-import { OracleHelper } from "src/handlers/OracleHelper";
-import { LineModel } from "src/common/entities/LineModel";
-import { ResultVW } from "src/common/api-interfaces/result";
-import { LINE_PROCEDURES } from "src/common/enums/stored-procedures";
-import { StatusCodes } from "src/common/enums/enums";
+import { OracleHelper } from "../handlers/OracleHelper";
+import { LineModel } from "../common/entities/LineModel";
+import { ResultVW } from "../common/api-interfaces/result";
+import { LINE_PROCEDURES } from "../common/enums/stored-procedures";
+import { StatusCodes } from "../common/enums/enums";
+
 
 //Get all lines using Oracle procedure
 export async function getLinesOracle(): Promise<ResultVW> {
@@ -100,11 +101,12 @@ export async function getLineByIdOracle(idLine: number): Promise<ResultVW> {
         if (!result.rows) {
             throw new Error('Query result rows are undefined');
         }
-        const line: LineModel = result.rows.map((row: any) => ({
+        const line: LineModel[] = result.rows.map((row: any) => ({
             idLine: row[0],
             lineName: row[1],
-        }))[0];
-        if (!line) {
+        }));
+
+        if (line.length === 0) {
             return new ResultVW(
                 'Line not found',
                 StatusCodes.NOT_FOUND,
@@ -124,6 +126,8 @@ export async function getLineByIdOracle(idLine: number): Promise<ResultVW> {
 export async function deleteLineOracle(idLine: number): Promise<ResultVW> {
     const db = await new OracleHelper().createConnection();
     try {
+        console.log('Aqui se entra para eliminar la linea')
+        console.log(idLine);
         const query = {
             text: LINE_PROCEDURES.DELETE_LINE,
             values: [
@@ -131,10 +135,11 @@ export async function deleteLineOracle(idLine: number): Promise<ResultVW> {
             ]
         }
         await db.execute(query.text, query.values);
+        const line = await getLineByIdOracle(idLine);
         const lineResult: ResultVW = new ResultVW(
             'Line deleted',
             StatusCodes.OK,
-            null
+            line.vw
         );
         return lineResult;
     } catch (error) {
