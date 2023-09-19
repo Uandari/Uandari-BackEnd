@@ -17,14 +17,14 @@ export async function getUsersOracle(): Promise<ResultVW> {
     if (!result.rows) {
       throw new Error('Query result rows are undefined');
     }
-
     const users: userResponse[] = result.rows.map((row: any) => ({
       idUser: row[0],
       name: row[1],
       lastNames: row[2],
       imageUrl: row[4],
       controlNumber: row[3],
-      role: row[6],
+      role: row[7],
+      idDelete: row[6]
     }));
 
     if (users.length === 0) {
@@ -121,7 +121,8 @@ export async function getUserByControlNumberOracle(
       lastNames: row[2],
       controlNumber: row[3],
       imageUrl: row[4],
-      role: row[6],
+      role: row[7],
+      idDelete: row[6],
     }));
 
     const userResult: ResultVW = new ResultVW(
@@ -185,18 +186,18 @@ export async function updateUserOracle(user: UserModel): Promise<ResultVW> {
   }
 }
 
-export async function deleteUserOracle(idUser: number): Promise<ResultVW> {
+export async function deleteUserOracle(controlNumber: number): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
-    if (!(await findByNoControl(idUser))) {
+    if (!(await findByNoControl(controlNumber))) {
       return new ResultVW('User not found', StatusCodes.BAD_REQUEST, []);
     }
     const query = {
       text: USER_PROCEDURES.DELETE_USER,
-      values: [idUser]
+      values: [controlNumber]
     }
     await db.execute(query.text, query.values);
-    const user = await getUserByControlNumberOracle(idUser);
+    const user = await getUserByControlNumberOracle(controlNumber);
     console.log(user);
     return new ResultVW('User deleted', StatusCodes.OK, user.vw);
   } catch (error) {

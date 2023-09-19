@@ -4,7 +4,7 @@ export enum USER_PROCEDURES {
   CREATE_USER = 'BEGIN ADDUSER(:1,:2,:3,:4,:5,:6,:7,:8); END;',
   //1: idUser, 2: name, 3: lastNames, 4: controlNumber, 5: mail, 6: password, 7: idRole, 8: token, 9: imageUrl
   UPDATE_USER = 'BEGIN UPDATEUSER(:1,:2,:3,:4,:5,:6,:7,:8,:9); END;',
-  //1: idUser
+  //1: controlNumber
   DELETE_USER = 'BEGIN DELETEUSER(:1); END;',
   //1: controlNumber 2: password
   LOGIN_USER = "SELECT * FROM USERSFM WHERE controlNumber = :1 AND password_ = :2",
