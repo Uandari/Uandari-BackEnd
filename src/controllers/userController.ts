@@ -134,12 +134,10 @@ const deleteUser = async (req: Request, res: Response) => {
     });
   }
 };
-const getUserById = async (req: Request, res: Response) => {
+const getUserByControlNumber = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    console.log(id);
-    const idUser = parseInt(id);
-    const user = await getUserByControlNumberOracle(idUser);
+    const { controlNumber } = req.params;
+    const user = await getUserByControlNumberOracle(controlNumber);
     res.status(user.statusCode).json({
       status: user.statusCode,
       message: user.message,
@@ -160,5 +158,5 @@ export {
   updateUser,
   getAllUsers,
   deleteUser,
-  getUserById,
+  getUserByControlNumber,
 };
