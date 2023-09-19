@@ -42,7 +42,7 @@ export async function getUsersOracle(): Promise<ResultVW> {
   }
 }
 
-export async function findByNoControl(controlNumber: number): Promise<boolean> {
+export async function findByNoControl(controlNumber: string): Promise<boolean> {
   const db = await new OracleHelper().createConnection();
   try {
     const query = {
@@ -103,7 +103,7 @@ export async function createUserOracle(user: UserModel): Promise<ResultVW> {
 }
 
 export async function getUserByControlNumberOracle(
-  idUser: number
+  idUser: string
 ): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
@@ -148,7 +148,7 @@ export async function updateUserOracle(user: UserModel): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
     console.log(user.controlNumber);
-    if (!(await findByNoControl(parseInt(user.controlNumber)))) {
+    if (!(await findByNoControl(user.controlNumber))) {
       return new ResultVW('User not found', StatusCodes.NOT_FOUND, []);
     }
     const {
@@ -186,7 +186,7 @@ export async function updateUserOracle(user: UserModel): Promise<ResultVW> {
   }
 }
 
-export async function deleteUserOracle(controlNumber: number): Promise<ResultVW> {
+export async function deleteUserOracle(controlNumber: string): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
     if (!(await findByNoControl(controlNumber))) {

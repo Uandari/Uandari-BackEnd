@@ -117,9 +117,9 @@ const loginUser = async (req: Request, res: Response) => {
 //Delete a user
 const deleteUser = async (req: Request, res: Response) => {
   try {
-    const idUser = parseInt(req.body.idUser);
+    const controlNumber = req.body.controlNumber;
 
-    const userDeleted = await deleteUserOracle(idUser);
+    const userDeleted = await deleteUserOracle(controlNumber);
     console.log(userDeleted);
     res.status(userDeleted.statusCode).json({
       status: userDeleted.statusCode,
