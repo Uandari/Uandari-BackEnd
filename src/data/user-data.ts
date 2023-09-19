@@ -6,6 +6,7 @@ import { USER_PROCEDURES } from '../common/enums/stored-procedures';
 import { StatusCodes } from '../common/enums/enums';
 import { OracleHelper } from '../handlers/OracleHelper';
 import { generarToken } from '../helpers/TokenHelpers';
+import generarJWT from '../helpers/generarJWT';
 
 export async function getUsersOracle(): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
@@ -220,7 +221,7 @@ export async function loginUserOracle(user: loginUserRequest): Promise<ResultVW>
         controlNumber: userRow[3],
         imageUrl: userRow[4],
         role: userRow[6],
-        accessToken: userRow[7],
+        accessToken: generarJWT(userRow[3]),
       };
       return new ResultVW('User found', StatusCodes.OK, user);
     } else {
