@@ -10,6 +10,7 @@ import categoryRoutes from './routes/categoryRoutes';
 import typeCategoryRoutes from './routes/typeCategoryRoutes';
 import escalatedIssueRoutes from './routes/escalatedIssueRoutes';
 import cellRoutes from './routes/cellRoutes';
+import lineRoutes from './routes/lineRoutes';
 import { Response } from 'express';
 const app = express();
 app.use(express.json());
@@ -32,6 +33,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/typecategory', typeCategoryRoutes);
 app.use('/api/escalatedissues', escalatedIssueRoutes);
 app.use('/api/cells', cellRoutes);
+app.use('/api/line', lineRoutes);
 
 app.use((_req, res: Response) => {
   res.status(StatusCodes.SERVER_ERROR).json({
