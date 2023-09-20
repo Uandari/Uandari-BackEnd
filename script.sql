@@ -1142,6 +1142,15 @@ SELECT
 FROM UserVW uv
 INNER JOIN Role r ON uv.idRole = r.idRole;
 
+
+CREATE TABLE OPERATION (
+    idOperation NUMBER GENERATED ALWAYS AS IDENTITY,
+    idCell NUMBER,
+    name_ VARCHAR2(255),
+    CONSTRAINT pk_idOperation PRIMARY KEY (idOperation)
+);
+
+
 CREATE TABLE OPERATION (
     idOperation NUMBER GENERATED ALWAYS AS IDENTITY,
     idCell NUMBER,
