@@ -43,6 +43,9 @@ const updateHourxHour = async (req: Request, res: Response) => {
       accumulativeDifference: req.body.accumulativeDifference, // Corrected property name
       idCell: req.body.idCell,
       idUser: req.body.idUser,
+      idAreas: req.body.idAreas,
+      idOperation: req.body.idOperation,
+      downtime: req.body.downtime,
     };
     console.log(hourXhour.idHourxHour);
     const hourXhourUpdated = await updateHourXHourOracle(hourXhour);
