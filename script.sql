@@ -1001,6 +1001,10 @@ WHEN OTHERS THEN ROLLBACK;
 
 RAISE;
 
+WHEN OTHERS THEN ROLLBACK;
+
+RAISE;
+
 END UPDATE_OBJECTIVES_INDICATOR;
 
 /* Create Table Line */
@@ -1085,6 +1089,9 @@ SELECT
     uv.password_,
     r.name AS rol,
     uv.token AS access_token
+FROM
+    UserVW uv
+    INNER JOIN Role r ON uv.idRole = r.idRole;
 FROM
     UserVW uv
     INNER JOIN Role r ON uv.idRole = r.idRole;
