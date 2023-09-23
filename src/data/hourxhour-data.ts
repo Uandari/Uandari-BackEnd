@@ -147,56 +147,6 @@ export async function updateHourXHourOracle(
     throw error;
   }
 }
-//GET ALL HOURXHOUR
-export async function getAllHourXHourOracle(): Promise<ResultVW> {
-  try {
-    const db = await new OracleHelper().createConnection();
-    const query = HOURXHOUR_PROCEDURES.GET_HOURXHOUR
-    const result = await db.execute(query);
-
-    if (!result.rows) {
-      return new ResultVW('HourXHour not found', StatusCodes.NOT_FOUND, []);
-    }
-
-    const hourXhourMap = new Map();
-    result.rows.forEach((row: any) => {
-      const idHourxHour = row[0];
-      if (!hourXhourMap.has(idHourxHour)) {
-        hourXhourMap.set(idHourxHour, {
-          idHourxHour,
-          hour: row[1],
-          date: row[2],
-          must: row[3],
-          mustAccumulative: row[4],
-          is: row[5],
-          isAccumulative: row[6],
-          difference: row[7],
-          accumulativeDifference: row[8],
-          idUser: row[9],
-          idCell: row[10],
-          issues: [],
-        });
-      }
-      hourXhourMap.get(idHourxHour).issues.push({
-        idhourxhourIssue: row[11],
-        description: row[13],
-        type: {
-          name: row[22],
-        },
-      });
-    });
-
-    const hourXhourResult = [...hourXhourMap.values()];
-
-    if (hourXhourResult.length === 0) {
-      return new ResultVW('HourXHour not found', StatusCodes.NOT_FOUND, []);
-    }
-
-    return new ResultVW('HourXHour found', StatusCodes.OK, hourXhourResult);
-  } catch (error) {
-    throw error;
-  }
-}
 //GET HOURX HOUR WITH OUT ISSUES
 export async function getHourXHour(): Promise<ResultVW> {
   try {
@@ -206,7 +156,7 @@ export async function getHourXHour(): Promise<ResultVW> {
     if (!result.rows) {
       return new ResultVW('HourXHour not found', StatusCodes.NOT_FOUND, []);
     }
-    const hourXhour: any = result.rows.map((row: any) => ({
+    const hourXhour: HourXHourModel[] = result.rows.map((row: any) => ({
       idHourxHour: row[0],
       hour: row[1],
       date: row[2],
@@ -214,11 +164,14 @@ export async function getHourXHour(): Promise<ResultVW> {
       mustAccumulative: row[4],
       is: row[5],
       isAccumulative: row[6],
-      diference: row[7],
-      diferenceAcomulative: row[8],
-      idCell: row[9],
-      idUser: row[10],
-    }))
+      difference: row[7],
+      accumulativeDifference: row[8],
+      downtime: row[9],
+      idCell: row[10],
+      idUser: row[11],
+      idAreas: row[12],
+      idOperation: row[13],
+    }));
     const hourXhourResult: ResultVW = new ResultVW(
       'HourXHour found',
       StatusCodes.OK,
@@ -230,3 +183,4 @@ export async function getHourXHour(): Promise<ResultVW> {
     throw error;
   }
 }
+
