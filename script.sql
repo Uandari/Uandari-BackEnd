@@ -1265,3 +1265,22 @@ EXCEPTION
     ROLLBACK;
     RAISE;
 END InsertHourxHour;
+
+/*
+    lISTADO DE PROBLEMAS POR TURNO
+*/
+CREATE OR REPLACE VIEW LISTOFISSUES AS
+SELECT
+    TO_CHAR(TO_DATE(i.date_, 'YYYY-MM-DD'), 'Day') AS day_of_week,
+    i.shift,
+    tc.typeCategory AS nombre_tipo_categoria,
+    i.description_ AS descripcion_problema,
+    SUM(i.enginesAffected) AS total_engines_affected,
+    c.name_ AS car_name
+FROM ISSUE i
+JOIN TYPES_CATEGORY tc ON i.idCategory = tc.idCategory
+JOIN HOURXHOUR hh ON i.idHourXhour = hh.idHourXhour
+JOIN CELL ce ON hh.idCell = ce.idCell
+JOIN LINE l ON ce.idLine = l.idLine
+JOIN CAR c ON l.idCar = c.idCar
+GROUP BY TO_CHAR(TO_DATE(i.date_, 'YYYY-MM-DD'), 'Day'), i.shift, tc.typeCategory, i.description_, c.name_;

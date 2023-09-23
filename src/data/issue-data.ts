@@ -2,6 +2,8 @@ import { OracleHelper } from '../handlers/OracleHelper';
 import { IssueModel } from '../common/entities/IssueModel';
 import { ResultVW } from '../common/api-interfaces/result';
 import { ISSUE_PROCEDURES } from '../common/enums/stored-procedures';
+import { Issue } from '../common/api-interfaces/Issues-api/issue';
+
 import { StatusCodes } from '../common/enums/enums';
 
 //Insert a new issue using Oracle procedure
@@ -172,79 +174,72 @@ export async function deleteIssueOracle(idIssue: number): Promise<ResultVW> {
 //List of issue
 // ... código previo
 
+function groupIssues(result: any): Issue[] {
+  const groupedIssues: Issue[] = [];
+
+  result.rows.forEach((row: any) => {
+    const typeCategory = row[2];
+    const description = row[3];
+    const day = row[0];
+    const shift = row[1];
+    const enginesAffected = row[4];
+    const carName = row[5];
+
+    let existingIssue = groupedIssues.find((issue) =>
+      issue.typeCategory === typeCategory && issue.description === description
+    );
+
+    if (!existingIssue) {
+      existingIssue = {
+        typeCategory: typeCategory,
+        description: description,
+        carName: carName,
+        days: [],
+      };
+      groupedIssues.push(existingIssue);
+    }
+
+    let existingDay = existingIssue.days.find((d) => d.day === day);
+    if (!existingDay) {
+      existingDay = {
+        day: day,
+        shifts: {
+          A: [],
+          B: [],
+          C: [],
+        },
+      };
+      existingIssue.days.push(existingDay);
+    }
+
+    if (!existingDay.shifts[shift]) {
+      existingDay.shifts[shift] = [];
+    }
+    existingDay.shifts[shift].push(enginesAffected);
+  });
+
+  return groupedIssues;
+}
+
 export async function listOfIssuesOracle(): Promise<ResultVW> {
   try {
     const db = await new OracleHelper().createConnection();
-    const query = ISSUE_PROCEDURES.LISTOFISSUES
+    const query = ISSUE_PROCEDURES.LISTOFISSUES;
     const result: any = await db.execute(query);
-    const groupedIssues: any = {};
 
-    result.rows.forEach((row: any) => {
-      const typeCategory = row[2];
-      const description = row[3];
-      const day = row[0];
-      const shift = row[1];
-      const enginesAffected = row[4];
+    const groupedIssues = groupIssues(result);
 
-      if (!groupedIssues[typeCategory]) {
-        groupedIssues[typeCategory] = [];
-      }
-
-      const existingIssue = groupedIssues[typeCategory].find(
-        (issue: any) => issue.description === description
-      );
-
-      if (existingIssue) {
-        const existingDay = existingIssue.days.find(
-          (d: any) => d.day === day
-        );
-        if (existingDay) {
-          if (!existingDay.shifts[shift]) {
-            existingDay.shifts[shift] = [];
-          }
-          existingDay.shifts[shift].push(enginesAffected);
-        } else {
-          existingIssue.days.push({
-            day: day,
-            shifts: {
-              [shift]: enginesAffected,
-              'A': [],
-              'B': [],
-              'C': [],
-            }
-          });
-        }
-      } else {
-        groupedIssues[typeCategory].push({
-          typeCategory: typeCategory,
-          description: description,
-          days: [
-            {
-              day: day,
-              shifts: {
-                [shift]: [enginesAffected],
-                'A': [],
-                'B': [],
-                'C': [],
-              }
-            }
-          ]
-        });
-      }
-    });
-
-    const groupedPayload = Object.values(groupedIssues);
     const issueResult: ResultVW = new ResultVW(
       'Issues found',
       StatusCodes.OK,
-      groupedPayload
+      groupedIssues
     );
     return issueResult;
-
   } catch (error) {
     throw error;
   }
 }
+
 
 export async function verifyIssueHourXHourOracle(idIssue: number): Promise<boolean> {
   try {
