@@ -221,7 +221,7 @@ export async function loginUserOracle(user: loginUserRequest): Promise<ResultVW>
         lastNames: userRow[2],
         controlNumber: userRow[3],
         imageUrl: userRow[4],
-        role: userRow[6],
+        role: userRow[7],
         accessToken: generarJWT(userRow[3]),
       };
       return new ResultVW('User found', StatusCodes.OK, user);
