@@ -25,10 +25,10 @@ export enum ROLE_PROCEDURES {
 export enum HOURXHOUR_PROCEDURES {
   GET_HOURXHOUR = 'SELECT * FROM HourxHourComplete WHERE isDelete = 0',
   GET_HOURXHOUR_WITHOUT_ISSUES = 'SELECT * FROM HourxHour',
-  // Pendiente de revisar
+  // p_must : Debe , p_id
   INSERT_MUST_AND_GET_ID = 'BEGIN InsertMustAndGetID(:p_must, :p_id); END;',
-  //1: idHourXHour, 2: hour, 3: date, 4: must, 5: mustAcomulative, 6: is, 7: isAcomulative, 8: diference, 9: accomulativeDiference, 10: idCell, 11: idUser
-  UPDATE_HOURXHOUR = 'BEGIN UPDATEHOURXHOUR(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11); END;',
+  //1: idHourXHour, 2: hour, 3: date, 4: must, 5: mustAcomulative, 6: is, 7: isAcomulative, 8: diference, 9: accomulativeDiference, 10: idCell, 11: idUser , 12: idAreas, 13: idOperation, 14: downtime
+  UPDATE_HOURXHOUR = 'BEGIN UPDATEHOURXHOUR(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14); END;',
   //1: idHourXHour
   GETBYID = 'SELECT * FROM HourxHour WHERE idHourXHour = :1',
 }

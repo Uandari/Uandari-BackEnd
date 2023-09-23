@@ -120,7 +120,6 @@ export async function getCellByIdOracle(idCell: number): Promise<ResultVW> {
       ]
     }
 
-    console.log(query);
     const result: any = await db.execute(query.text, query.values);
 
     if (!result.rows) {

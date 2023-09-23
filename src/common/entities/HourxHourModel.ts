@@ -10,6 +10,9 @@ export class HourXHourModel {
   accumulativeDifference: number;
   idCell: number;
   idUser: number;
+  idAreas: number;
+  idOperation: number;
+  downtime: number;
 
   constructor(
     hour: string,
@@ -22,6 +25,9 @@ export class HourXHourModel {
     accumulativeDifference: number,
     idUser: number,
     idCell: number,
+    idAreas: number,
+    idOperation: number,
+    downtime: number,
     idHourxHour?: number
   ) {
     this.hour = hour;
@@ -34,6 +40,9 @@ export class HourXHourModel {
     this.accumulativeDifference = accumulativeDifference;
     this.idCell = idCell;
     this.idUser = idUser;
+    this.idAreas = idAreas;
+    this.idOperation = idOperation;
+    this.downtime = downtime;
     this.idHourxHour = idHourxHour;
   }
 }

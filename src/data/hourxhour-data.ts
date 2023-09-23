@@ -104,6 +104,9 @@ export async function updateHourXHourOracle(
       accumulativeDifference,
       idCell,
       idUser,
+      idAreas,
+      idOperation,
+      downtime,
     } = hourXhour;
 
     const query = {
@@ -119,7 +122,10 @@ export async function updateHourXHourOracle(
         difference,
         accumulativeDifference,
         idCell,
-        idUser
+        idUser,
+        idAreas,
+        idOperation,
+        downtime,
       ]
     }
     await db.execute(query.text, query.values);
