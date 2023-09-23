@@ -14,8 +14,5 @@ router.post('/create', checkAuth, createHour);
 router.get('/', checkAuth, getHourXHourComplete)
 router.post('/update', checkAuth, updateHourxHour);
 router.get('/:id', checkAuth, getHourxHourById);
-//Get All Hours with issues
-//router.get('/getAllHours', getAllHourxHour);
-//Get all hours without issues
 
 export default router;

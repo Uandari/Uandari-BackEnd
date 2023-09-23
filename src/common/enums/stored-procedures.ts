@@ -23,7 +23,6 @@ export enum ROLE_PROCEDURES {
   GETBYID = 'SELECT * FROM ROLE WHERE idRole = :1 ',
 }
 export enum HOURXHOUR_PROCEDURES {
-  GET_HOURXHOUR = 'SELECT * FROM HourxHourComplete WHERE isDelete = 0',
   GET_HOURXHOUR_WITHOUT_ISSUES = 'SELECT * FROM HourxHour',
   // p_must : Debe , p_id
   INSERT_MUST_AND_GET_ID = 'BEGIN InsertMustAndGetID(:p_must, :p_id); END;',
@@ -92,4 +91,10 @@ export enum LINE_PROCEDURES {
   DELETE_LINE = 'BEGIN DELETELINE(:1); END;',
   //1: idLine
   GETBYID = 'SELECT * FROM LINE WHERE idLine = :1 ',
+}
+export enum OPERATION_PROCEDURES {
+  GET_OPERATION = 'SELECT * FROM OPERATION',
+}
+export enum AREA_PROCEDURES {
+  GET_AREAS = 'SELECT * FROM AREAS',
 }

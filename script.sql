@@ -1150,10 +1150,118 @@ CREATE TABLE OPERATION (
     CONSTRAINT pk_idOperation PRIMARY KEY (idOperation)
 );
 
+INSERT INTO OPERATION (idCell, name_) VALUES (1, '0');
+INSERT INTO OPERATION (idCell, name_) VALUES (2, '350');
+INSERT INTO OPERATION (idCell, name_) VALUES (3, '0');
+INSERT INTO OPERATION (idCell, name_) VALUES (4, '1560');
+INSERT INTO OPERATION (idCell, name_) VALUES (6, '180');
+INSERT INTO OPERATION (idCell, name_) VALUES (7, '930');
+INSERT INTO OPERATION (idCell, name_) VALUES (8, '1210');
+INSERT INTO OPERATION (idCell, name_) VALUES (9, '720');
 
-CREATE TABLE OPERATION (
-    idOperation NUMBER GENERATED ALWAYS AS IDENTITY,
-    idCell NUMBER,
-    name_ VARCHAR2(255),
-    CONSTRAINT pk_idOperation PRIMARY KEY (idOperation)
+CREATE TABLE Areas (
+    idAreas NUMBER GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR2(255),
+    CONSTRAINT pk_idAreas PRIMARY KEY (idAreas)
 );
+
+INSERT INTO Areas (name) VALUES ('Ausentismo');
+INSERT INTO Areas (name) VALUES ('Produccion');
+INSERT INTO Areas (name) VALUES ('Q-Mot Hausteile');
+INSERT INTO Areas (name) VALUES ('Planeacion');
+INSERT INTO Areas (name) VALUES ('Mantenimiento');
+INSERT INTO Areas (name) VALUES ('Q-Warenfilter');
+INSERT INTO Areas (name) VALUES ('Pre-Serie');
+INSERT INTO Areas (name) VALUES ('Q-Partes de compra');
+INSERT INTO Areas (name) VALUES ('Logistica paro no Programado');
+INSERT INTO Areas (name) VALUES ('IT');
+INSERT INTO Areas (name) VALUES ('Pre-Serie');
+
+/*
+    Añadiendo los campos nuevos de horas x horas
+*/
+ALTER TABLE HourxHour
+ADD (
+    idAreas NUMBER,
+    idOperation NUMBER,
+    downtime NUMBER
+);
+/*
+    Añadiendo los campos nuevos al sp de hourx hour
+*/
+CREATE OR REPLACE PROCEDURE UpdateHourxHour (
+  p_idHourXHour_ NUMBER,
+  p_hour_ VARCHAR2,
+  p_date_ VARCHAR2,
+  p_must NUMBER,
+  p_mustAccumulative NUMBER,
+  p_is_ NUMBER,
+  p_isAccumulative NUMBER,
+  p_difference NUMBER,
+  p_accumulativeDifference NUMBER,
+  p_idCell NUMBER,
+  p_idUser NUMBER,
+  p_idAreas NUMBER, -- Nuevo parámetro para idAreas
+  p_idOperation NUMBER, -- Nuevo parámetro para idOperation
+  p_downtime NUMBER -- Nuevo parámetro para downtime
+)
+AS
+BEGIN
+  UPDATE HourxHour
+  SET hour_ = p_hour_,
+      date_ = p_date_,
+      must = p_must,
+      mustAccumulative = p_mustAccumulative,
+      is_ = p_is_,
+      isAccumulative = p_isAccumulative,
+      difference = p_difference,
+      accumulativeDifference = p_accumulativeDifference,
+      idCell = p_idCell,
+      idUser = p_idUser,
+      idAreas = p_idAreas, -- Nuevo campo
+      idOperation = p_idOperation, -- Nuevo campo
+      downtime = p_downtime -- Nuevo campo
+  WHERE idHourXHour = p_idHourXHour_;
+
+  COMMIT;
+EXCEPTION
+  -- En caso de error, deshacer la transacción y relanzar la excepción
+  WHEN OTHERS THEN
+    ROLLBACK;
+    RAISE;
+END UpdateHourxHour;
+
+CREATE OR REPLACE PROCEDURE InsertHourxHour (
+  p_hour_ VARCHAR2,
+  p_date_ VARCHAR2,
+  p_must NUMBER,
+  p_mustAccumulative NUMBER,
+  p_is NUMBER,
+  p_isAccumulative NUMBER,
+  p_difference NUMBER,
+  p_accumulativeDifference NUMBER,
+  p_idCell NUMBER,
+  p_idUser NUMBER,
+  p_idAreas NUMBER, -- Nuevo parámetro para idAreas
+  p_idOperation NUMBER, -- Nuevo parámetro para idOperation
+  p_downtime NUMBER -- Nuevo parámetro para downtime
+) 
+AS
+BEGIN
+  INSERT INTO HourxHour (
+    hour_, date_, must, mustAccumulative, is_, isAccumulative,
+    difference, accumulativeDifference, idCell, idUser,
+    idAreas, idOperation, downtime -- Nuevos campos
+  ) VALUES (
+    p_hour_, p_date_, p_must, p_mustAccumulative, p_is, p_isAccumulative,
+    p_difference, p_accumulativeDifference, p_idCell, p_idUser,
+    p_idAreas, p_idOperation, p_downtime -- Nuevos valores
+  );
+
+  COMMIT;
+EXCEPTION
+  -- En caso de error, deshacer la transacción y relanzar la excepción
+  WHEN OTHERS THEN
+    ROLLBACK;
+    RAISE;
+END InsertHourxHour;

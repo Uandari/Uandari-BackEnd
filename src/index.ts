@@ -9,6 +9,8 @@ import hourxhourRoutes from './routes/hourxhourRoutes';
 import categoryRoutes from './routes/categoryRoutes';
 import typeCategoryRoutes from './routes/typeCategoryRoutes';
 import escalatedIssueRoutes from './routes/escalatedIssueRoutes';
+import operationRoutes from './routes/operationRoutes';
+import areasRoutes from './routes/areasRoutes';
 import cellRoutes from './routes/cellRoutes';
 import lineRoutes from './routes/lineRoutes';
 import { Response } from 'express';
@@ -20,7 +22,7 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: 'http://172.16.0.221:5173',
+    origin: 'http://localhost:5173',
   })
 );
 
@@ -34,6 +36,8 @@ app.use('/api/typecategory', typeCategoryRoutes);
 app.use('/api/escalatedissues', escalatedIssueRoutes);
 app.use('/api/cells', cellRoutes);
 app.use('/api/line', lineRoutes);
+app.use('/api/operation', operationRoutes);
+app.use('/api/areas', areasRoutes);
 
 app.use((_req, res: Response) => {
   res.status(StatusCodes.SERVER_ERROR).json({
