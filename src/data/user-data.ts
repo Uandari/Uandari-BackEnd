@@ -1,5 +1,5 @@
 import { loginUserRequest } from '../common/api-interfaces/user/loginUserRequest';
-import { userResponse } from 'src/common/api-interfaces/user/userResponse';
+import { userResponse } from '../common/api-interfaces/user/userResponse';
 import { ResultVW } from '../common/api-interfaces/result';
 import { UserModel } from '../common/entities/UserModel';
 import { USER_PROCEDURES } from '../common/enums/stored-procedures';

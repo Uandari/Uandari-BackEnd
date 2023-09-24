@@ -71,7 +71,7 @@ export enum ESCALATEDISSUES_PROCEDURES {
   GETBYID = 'SELECT * FROM ESCALATEDISSUES WHERE idIssueScaled = :1',
 }
 export enum CELL_PROCEDURES {
-  GET_CELLS = 'SELECT * FROM CELL WHERE isDelete = 0 ',
+  GET_CELLS = 'SELECT * FROM COMPLETECELLS',
   //1:CellName, 2: idUser, 3: idLine
   INSERT_CELL = 'BEGIN ADDCELL(:1,:2,:3); END;',
   //1: idCell, 2: cellName, 3: idUser, 4: idLine
@@ -82,11 +82,11 @@ export enum CELL_PROCEDURES {
   DELETE_CELL = 'BEGIN DELETECELL(:1);END;'
 }
 export enum LINE_PROCEDURES {
-  GET_LINES = 'SELECT * FROM LINE WHERE isDelete = 0',
-  //1: lineName
-  INSERT_LINE = 'BEGIN ADDLINE(:1); END;',
-  //1: idLine, 2: lineName
-  UPDATE_LINE = 'BEGIN UPDATELINE(:1,:2); END;',
+  GET_LINES = 'SELECT * FROM LineWithCar',
+  //1: lineName 2: idCar
+  INSERT_LINE = 'BEGIN ADDLINE(:1,:2); END;',
+  //1: idLine, 2: lineName 3: idCar
+  UPDATE_LINE = 'BEGIN UPDATELINE(:1,:2,:3); END;',
   //1: idLine
   DELETE_LINE = 'BEGIN DELETELINE(:1); END;',
   //1: idLine
@@ -97,4 +97,7 @@ export enum OPERATION_PROCEDURES {
 }
 export enum AREA_PROCEDURES {
   GET_AREAS = 'SELECT * FROM AREAS',
+}
+export enum CAR_PROCEDURES{
+  GET_CARS = 'SELECT * FROM CAR',
 }
