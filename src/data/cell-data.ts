@@ -20,8 +20,8 @@ export async function getCellsOracle(): Promise<ResultVW> {
     const cells: CellModel[] = result.rows.map((row: any) => ({
       idCell: row[0],
       cellName: row[1],
-      idUser: row[2],
-      idLine: row[3],
+      userName: row[2],
+      lineName: row[3],
     }));
 
     if (cells.length === 0) {

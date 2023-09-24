@@ -1267,6 +1267,39 @@ EXCEPTION
 END InsertHourxHour;
 
 /*
+    Tabla Car
+*/
+CREATE TABLE Car (
+    idCar NUMBER GENERATED ALWAYS AS IDENTITY,
+    name_ VARCHAR2(50),
+    CONSTRAINT pk_idCar PRIMARY KEY (idCar)
+);
+
+/*
+    Añadiendo el campo idCar a la tabla Line
+*/
+ALTER TABLE LINE
+ADD idCar NUMBER;
+
+
+-- Insertar un VW Golf
+INSERT INTO Car (name_) VALUES ('VW Golf');
+
+-- Insertar un VW Passat
+INSERT INTO Car (name_) VALUES ('VW Passat');
+
+-- Insertar un VW Jetta
+INSERT INTO Car (name_) VALUES ('VW Jetta');
+
+-- Insertar un VW Beetle
+INSERT INTO Car (name_) VALUES ('VW Beetle');
+
+-- Insertar un VW Tiguan
+INSERT INTO Car (name_) VALUES ('VW Tiguan');
+
+
+
+/*
     lISTADO DE PROBLEMAS POR TURNO
 */
 CREATE OR REPLACE VIEW LISTOFISSUES AS

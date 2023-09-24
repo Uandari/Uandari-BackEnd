@@ -25,6 +25,7 @@ const createLine = async (req: Request, res: Response) => {
     try {
         const line = {
             lineName: req.body.lineName,
+            idCar: req.body.idCar,
         };
         const lines = await insertLineOracle(line);
         res.status(lines.statusCode).json({
@@ -47,6 +48,7 @@ const updateLine = async (req: Request, res: Response) => {
         const line = {
             idLine: req.body.idLine,
             lineName: req.body.lineName,
+            idCar: req.body.idCar,
         };
         const lines = await updateLineOracle(line);
         res.status(lines.statusCode).json({

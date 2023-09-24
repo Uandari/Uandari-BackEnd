@@ -6,7 +6,7 @@ import {
   getHourXHourByIdOracle,
   getHourXHour
 } from '../data/hourxhour-data';
-import { HourXHourModel } from 'src/common/entities/HourxHourModel';
+import { HourXHourModel } from '../common/entities/HourxHourModel';
 
 //getAllHourXHourOracle
 

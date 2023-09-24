@@ -17,6 +17,7 @@ export async function getLinesOracle(): Promise<ResultVW> {
         const lines: LineModel[] = result.rows.map((row: any) => ({
             idLine: row[0],
             lineName: row[1],
+            carName: row[3],
         }));
         if (lines.length === 0) {
             return new ResultVW(
@@ -38,11 +39,11 @@ export async function getLinesOracle(): Promise<ResultVW> {
 export async function insertLineOracle(line: LineModel): Promise<ResultVW> {
     const db = await new OracleHelper().createConnection();
     try {
-        const { lineName } = line;
+        const { lineName, idCar } = line;
         const query = {
             text: LINE_PROCEDURES.INSERT_LINE,
             values: [
-                lineName
+                lineName, idCar
             ]
         }
         await db.execute(query.text, query.values);
@@ -64,12 +65,13 @@ export async function insertLineOracle(line: LineModel): Promise<ResultVW> {
 export async function updateLineOracle(line: LineModel): Promise<ResultVW> {
     const db = await new OracleHelper().createConnection();
     try {
-        const { idLine, lineName } = line;
+        const { idLine, lineName, idCar } = line;
         const query = {
             text: LINE_PROCEDURES.UPDATE_LINE,
             values: [
                 idLine,
-                lineName
+                lineName,
+                idCar
             ]
         }
         await db.execute(query.text, query.values);
@@ -104,6 +106,7 @@ export async function getLineByIdOracle(idLine: number): Promise<ResultVW> {
         const line: LineModel[] = result.rows.map((row: any) => ({
             idLine: row[0],
             lineName: row[1],
+            idCar: row[2],
         }));
 
         if (line.length === 0) {
