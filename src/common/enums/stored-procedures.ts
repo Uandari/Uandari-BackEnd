@@ -98,3 +98,6 @@ export enum OPERATION_PROCEDURES {
 export enum AREA_PROCEDURES {
   GET_AREAS = 'SELECT * FROM AREAS',
 }
+export enum CAR_PROCEDURES{
+  GET_CARS = 'SELECT * FROM CAR',
+}

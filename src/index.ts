@@ -13,6 +13,7 @@ import operationRoutes from './routes/operationRoutes';
 import areasRoutes from './routes/areasRoutes';
 import cellRoutes from './routes/cellRoutes';
 import lineRoutes from './routes/lineRoutes';
+import carRoutes from './routes/carRoutes';
 import { Response } from 'express';
 const app = express();
 app.use(express.json());
@@ -38,6 +39,7 @@ app.use('/api/cells', cellRoutes);
 app.use('/api/line', lineRoutes);
 app.use('/api/operation', operationRoutes);
 app.use('/api/areas', areasRoutes);
+app.use('/api/car', carRoutes);
 
 app.use((_req, res: Response) => {
   res.status(StatusCodes.SERVER_ERROR).json({
