@@ -1,5 +1,5 @@
 export enum USER_PROCEDURES {
-  GET_USERS = 'SELECT * FROM USERSFM',
+  GET_USERS = 'SELECT * FROM USERSFM where isDelete = 0',
   //1: name, 2: lastNames, 3: controlNumber, 4: mail, 5: password, 6: idRole, 7: token, 8: imageUrl
   CREATE_USER = 'BEGIN ADDUSER(:1,:2,:3,:4,:5,:6,:7,:8); END;',
   //1: idUser, 2: name, 3: lastNames, 4: controlNumber, 5: mail, 6: password, 7: idRole, 8: token, 9: imageUrl
@@ -98,6 +98,6 @@ export enum OPERATION_PROCEDURES {
 export enum AREA_PROCEDURES {
   GET_AREAS = 'SELECT * FROM AREAS',
 }
-export enum CAR_PROCEDURES{
+export enum CAR_PROCEDURES {
   GET_CARS = 'SELECT * FROM CAR',
 }
