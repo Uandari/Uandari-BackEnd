@@ -45,6 +45,7 @@ app.use('/api/technicians', TechnicianRoutes);
 
 
 
+
 app.use((_req, res: Response) => {
   res.status(StatusCodes.SERVER_ERROR).json({
     status: StatusCodes.SERVER_ERROR,
