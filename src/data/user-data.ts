@@ -226,7 +226,7 @@ export async function loginUserOracle(user: loginUserRequest): Promise<ResultVW>
       };
       return new ResultVW('User found', StatusCodes.OK, user);
     } else {
-      throw new Error('User not found');
+      return new ResultVW('User not found', StatusCodes.NOT_FOUND, []);
     }
   } catch (error) {
     throw error;
