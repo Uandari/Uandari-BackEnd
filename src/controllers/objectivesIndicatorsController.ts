@@ -3,7 +3,7 @@ import { Response, Request } from "express";
 import { 
     getObjectivesIndicatorsByIdOracle,
     getObjectivesIndicatorsOracle
-} from "src/data/objectivesindicators-data";
+} from "../data/objectivesindicators-data";
 
 const getAllObjectivesIndicators = async (_req: Request, res: Response) => {
     try {
