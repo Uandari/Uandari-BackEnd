@@ -8,6 +8,7 @@ import {
   findByNoControl,
   deleteUserOracle,
   getUserByControlNumberOracle,
+  getUserSystemOracle
 } from '../data/user-data';
 //Get all users
 const getAllUsers = async (_req: Request, res: Response) => {
@@ -152,6 +153,23 @@ const getUserByControlNumber = async (req: Request, res: Response) => {
   }
 };
 
+const getUsersSystem = async (_req: Request, res: Response) => {
+  try {
+    const users = await getUserSystemOracle();
+    res.status(users.statusCode).json({
+      status: users.statusCode,
+      message: users.message,
+      payload: users.vw,
+    });
+  } catch (error) {
+    res.status(StatusCodes.SERVER_ERROR).json({
+      status: StatusCodes.SERVER_ERROR,
+      message: error,
+      payload: [],
+    });
+  }
+}
+
 export {
   createUser,
   loginUser,
@@ -159,4 +177,5 @@ export {
   getAllUsers,
   deleteUser,
   getUserByControlNumber,
+  getUsersSystem
 };

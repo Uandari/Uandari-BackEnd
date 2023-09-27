@@ -9,7 +9,9 @@ export enum USER_PROCEDURES {
   //1: controlNumber 2: password
   LOGIN_USER = "SELECT * FROM USERSFM WHERE controlNumber = :1 AND password_ = :2",
   //1: controlNumber
-  GETBYCONTROLNUMBER = 'SELECT * FROM USERSFM WHERE controlNumber = :1'
+  GETBYCONTROLNUMBER = 'SELECT * FROM USERSFM WHERE controlNumber = :1',
+  //Get user sistem
+  GET_USER_SYSTEM = 'SELECT * FROM USERSYSTEMVIEW',
 }
 export enum ROLE_PROCEDURES {
   GET_ROLES = 'SELECT * FROM  ROLE WHERE isDelete = 0',

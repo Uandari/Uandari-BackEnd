@@ -2,6 +2,7 @@ import { loginUserRequest } from '../common/api-interfaces/user/loginUserRequest
 import { userResponse } from '../common/api-interfaces/user/userResponse';
 import { ResultVW } from '../common/api-interfaces/result';
 import { UserModel } from '../common/entities/UserModel';
+import { userSystemResponse } from '../common/api-interfaces/user/userSystemResponse';
 import { USER_PROCEDURES } from '../common/enums/stored-procedures';
 import { StatusCodes } from '../common/enums/enums';
 import { OracleHelper } from '../handlers/OracleHelper';
@@ -23,8 +24,7 @@ export async function getUsersOracle(): Promise<ResultVW> {
       lastNames: row[2],
       imageUrl: row[4],
       controlNumber: row[3],
-      role: row[7],
-      idDelete: row[6]
+      role: row[7]
     }));
 
     if (users.length === 0) {
@@ -235,5 +235,36 @@ export async function loginUserOracle(user: loginUserRequest): Promise<ResultVW>
   }
 }
 
+export async function getUserSystemOracle(): Promise<ResultVW> {
+  const db = await new OracleHelper().createConnection();
+  try {
+    const query = USER_PROCEDURES.GET_USER_SYSTEM;
+    console.log(query);
+    const result = await db.execute(query);
+    if (!result.rows) {
+      throw new Error('Query result rows are undefined');
+    }
+    const users: userSystemResponse[] = result.rows.map((row: any) => ({
+      idUser: row[0],
+      name: row[1],
+      lastNames: row[2],
+      controlNumber: row[3],
+      role: row[4],
+      line: row[5],
+    }));
+    if (users.length === 0) {
+      return new ResultVW(
+        'There are no users to show',
+        StatusCodes.NOT_FOUND,
+        users
+      );
+    }
+    return new ResultVW('successfully extracted users', StatusCodes.OK, users);
 
+  } catch (error) {
+    throw error;
+  } finally {
+    db.release();
+  }
 
+}
