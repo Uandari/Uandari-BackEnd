@@ -2,7 +2,7 @@ import express from 'express';
 import { 
     getAllObjectivesIndicators,
     getObjectivesIndicatorsById 
-} from 'src/controllers/objectivesIndicatorsController';
+} from '../controllers/objectivesIndicatorsController';
 
 import checkAuth from '../middlewares/checkAuth';
 const router = express.Router();
