@@ -244,14 +244,17 @@ export async function getUserSystemOracle(): Promise<ResultVW> {
     if (!result.rows) {
       throw new Error('Query result rows are undefined');
     }
-    const users: userSystemResponse[] = result.rows.map((row: any) => ({
-      idUser: row[0],
-      name: row[1],
-      lastNames: row[2],
-      controlNumber: row[3],
-      role: row[4],
-      line: row[5],
-    }));
+    const users: userSystemResponse[] = result.rows
+      .map((row: any) => ({
+        idUser: row[0],
+        name: row[1],
+        lastNames: row[2],
+        controlNumber: row[3],
+        role: row[4],
+        line: row[5],
+      }))
+      .filter((user: userSystemResponse) => user.role !== 'Admin');
+
     if (users.length === 0) {
       return new ResultVW(
         'There are no users to show',
@@ -260,11 +263,9 @@ export async function getUserSystemOracle(): Promise<ResultVW> {
       );
     }
     return new ResultVW('successfully extracted users', StatusCodes.OK, users);
-
   } catch (error) {
     throw error;
   } finally {
     db.release();
   }
-
 }
