@@ -1,8 +1,8 @@
-import { OracleHelper } from "src/handlers/OracleHelper";
-import { ObjectivesIndicatorsModel } from "src/common/entities/ObjectivesIndicatorsModel";
-import { ResultVW } from "src/common/api-interfaces/result";
-import { OBJECTIVESINDICATORS_PROCEDURES } from "src/common/enums/stored-procedures";
-import { StatusCodes } from "src/common/enums/enums";
+import { OracleHelper } from "../handlers/OracleHelper";
+import { ObjectivesIndicatorsModel } from "../common/entities/ObjectivesIndicatorsModel";
+import { ResultVW } from "../common/api-interfaces/result";
+import { OBJECTIVESINDICATORS_PROCEDURES } from "../common/enums/stored-procedures";
+import { StatusCodes } from "../common/enums/enums";
 
 //Get all ObjectivesIndicators
 export async function getObjectivesIndicatorsOracle(): Promise<ResultVW> {
