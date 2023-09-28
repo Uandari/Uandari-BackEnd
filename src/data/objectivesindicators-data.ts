@@ -8,11 +8,11 @@ import { StatusCodes } from "../common/enums/enums";
 export async function getObjectivesIndicatorsOracle(): Promise<ResultVW> {
   const db = await new OracleHelper().createConnection();
   try {
-    const query = {
-      text: OBJECTIVESINDICATORS_PROCEDURES.GET_OBJECTIVESINDICATORS,
-      values: []
+    const query = OBJECTIVESINDICATORS_PROCEDURES.GET_OBJECTIVESINDICATORS
+    const result: any = await db.execute(query);
+    if (!result.rows) {
+      throw new Error('Query result rows are undefined');
     }
-    const result: any = await db.execute(query.text, query.values);
     const objectivesIndicatorsResult: ObjectivesIndicatorsModel[] = result.rows.map((row: any) => ({
       idObjectivesIndicators: row[0],
       security_MUST: row[1],
@@ -23,12 +23,14 @@ export async function getObjectivesIndicatorsOracle(): Promise<ResultVW> {
       idUser: row[6],
       isDelete: row[7]
     }));
-    const objectivesIndicators: ResultVW = new ResultVW(
-      'ObjectivesIndicators',
-      StatusCodes.OK,
-      objectivesIndicatorsResult
-    );
-    return objectivesIndicators;
+    if (objectivesIndicatorsResult.length === 0) {
+      return new ResultVW(
+        'There are no Objectives Indicators to show',
+        StatusCodes.NOT_FOUND,
+        objectivesIndicatorsResult
+      );
+    }
+    return new ResultVW('Objectives Indicators Found', StatusCodes.OK, objectivesIndicatorsResult);
   } catch (error) {
     throw error;
   }
