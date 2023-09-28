@@ -15,6 +15,7 @@ import cellRoutes from './routes/cellRoutes';
 import lineRoutes from './routes/lineRoutes';
 import carRoutes from './routes/carRoutes';
 import TechnicianRoutes from './routes/techniciansRoutes';
+import objectivesIndicatorsRoutes from './routes/objectivesIndicatorsRoutes';
 import { Response } from 'express';
 const app = express();
 app.use(express.json());
@@ -38,10 +39,13 @@ app.use('/api/typecategory', typeCategoryRoutes);
 app.use('/api/escalatedissues', escalatedIssueRoutes);
 app.use('/api/cells', cellRoutes);
 app.use('/api/line', lineRoutes);
+app.use('/api/objectivesindicators', objectivesIndicatorsRoutes);
 app.use('/api/operation', operationRoutes);
 app.use('/api/areas', areasRoutes);
 app.use('/api/car', carRoutes);
 app.use('/api/technicians', TechnicianRoutes);
+
+
 
 
 app.use((_req, res: Response) => {
